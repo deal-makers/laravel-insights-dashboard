@@ -40,7 +40,7 @@ class RolesController extends Controller
         }
         $permissions = Permission::get()->pluck('name', 'name');
 
-        return view('admin.roles.create', compact('permissions'));
+        return view('pages.roles.create', compact('permissions'));
     }
 
     /**
@@ -58,7 +58,7 @@ class RolesController extends Controller
         $permissions = $request->input('permission') ? $request->input('permission') : [];
         $role->givePermissionTo($permissions);
 
-        return redirect()->route('admin.roles.index');
+        return redirect()->route('roles.index');
     }
 
 
@@ -75,7 +75,7 @@ class RolesController extends Controller
         }
         $permissions = Permission::get()->pluck('name', 'name');
 
-        return view('admin.roles.edit', compact('role', 'permissions'));
+        return view('pages.roles.edit', compact('role', 'permissions'));
     }
 
     /**
@@ -95,7 +95,7 @@ class RolesController extends Controller
         $permissions = $request->input('permission') ? $request->input('permission') : [];
         $role->syncPermissions($permissions);
 
-        return redirect()->route('admin.roles.index');
+        return redirect()->route('roles.index');
     }
 
     public function show(Role $role)
@@ -106,7 +106,7 @@ class RolesController extends Controller
 
         $role->load('permissions');
 
-        return view('admin.roles.show', compact('role'));
+        return view('pages.roles.show', compact('role'));
     }
 
 
@@ -124,7 +124,7 @@ class RolesController extends Controller
 
         $role->delete();
 
-        return redirect()->route('admin.roles.index');
+        return redirect()->route('roles.index');
     }
 
     /**

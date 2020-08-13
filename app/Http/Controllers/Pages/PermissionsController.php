@@ -24,7 +24,7 @@ class PermissionsController extends Controller
 
         $permissions = Permission::all();
 
-        return view('admin.permissions.index', compact('permissions'));
+        return view('pages.permissions.index', compact('permissions'));
     }
 
     /**
@@ -37,7 +37,7 @@ class PermissionsController extends Controller
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
-        return view('admin.permissions.create');
+        return view('pages.permissions.create');
     }
 
     /**
@@ -53,7 +53,7 @@ class PermissionsController extends Controller
         }
         Permission::create($request->all());
 
-        return redirect()->route('admin.permissions.index');
+        return redirect()->route('permissions.index');
     }
 
 
@@ -69,7 +69,7 @@ class PermissionsController extends Controller
             return abort(401);
         }
 
-        return view('admin.permissions.edit', compact('permission'));
+        return view('pages.permissions.edit', compact('permission'));
     }
 
     /**
@@ -87,7 +87,7 @@ class PermissionsController extends Controller
 
         $permission->update($request->all());
 
-        return redirect()->route('admin.permissions.index');
+        return redirect()->route('permissions.index');
     }
 
 
@@ -105,7 +105,7 @@ class PermissionsController extends Controller
 
         $permission->delete();
 
-        return redirect()->route('admin.permissions.index');
+        return redirect()->route('permissions.index');
     }
 
     public function show(Permission $permission)
@@ -114,7 +114,7 @@ class PermissionsController extends Controller
             return abort(401);
         }
 
-        return view('admin.permissions.show', compact('permission'));
+        return view('pages.permissions.show', compact('permission'));
     }
 
     /**

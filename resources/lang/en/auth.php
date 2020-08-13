@@ -13,7 +13,10 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
+    'credential_error' => 'These credentials do not match our records.',
+    'failed' => 'Sorry, your Eamil or Password was incorrect.',
+    'pending' => 'Sorry, your account is pending yet.',
+    'reject' => 'Sorry, your account was block.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
 ];

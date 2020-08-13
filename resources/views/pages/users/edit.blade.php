@@ -1,22 +1,4 @@
-@extends('layouts.admin')
-@section('styles')
-    <!-- third party css -->
-    <link href="{{ asset('admin_assets/libs/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('admin_assets/libs/flatpickr/flatpickr.min.css') }}" rel="stylesheet" type="text/css" />
-    <!-- third party css end -->
-    <style>
-        .select2-container{
-            width: 100% !important;
-        }
-        .select2-selection--single{
-            height: 32px !important;
-            border-color: #ced4da !important;
-        }
-        .select2-selection__rendered{
-            /*line-height: 32px !important;*/
-        }
-    </style>
-@endsection
+@extends('layouts.app')
 @section('content')
 <div class="row">
     <div class="col-12">
@@ -24,7 +6,7 @@
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.users.index') }}">
+                        <a href="{{ route('users.index') }}">
                             {{ trans('cruds.user.title_singular') }}
                         </a>
                     </li>
@@ -38,7 +20,7 @@
 <!-- end page title -->
 <div class="card">
     <div class="card-body">
-        <form action="{{ route("admin.users.update", [$user->id]) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route("users.update", [$user->id]) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
@@ -81,35 +63,6 @@
                     </div>
                 @endif
             </div>
-            <div class="form-group {{ $errors->has('trial_start') ? 'has-error' : '' }}">
-                <label for="trial_start">{{ trans('cruds.user.fields.trial_start') }}*</label>
-                <input type="text" id="trial_start" name="trial_start" class="form-control" value="{{ old('trial_start', isset($user) ? $user->trial_start : '') }}" required>
-                @if($errors->has('trial_start'))
-                    <div class="mt-1" style="color: #e6334d; font-weight: 500;">
-                        {{ $errors->first('trial_start') }}
-                    </div>
-                @endif
-            </div>
-            <div class="form-group {{ $errors->has('trial_end') ? 'has-error' : '' }}">
-                <label for="trial_end">{{ trans('cruds.user.fields.trial_end') }}*</label>
-                <input type="text" id="trial_end" name="trial_end" class="form-control" value="{{ old('trial_end', isset($user) ? $user->trial_end : '') }}" required>
-                @if($errors->has('trial_end'))
-                    <div class="mt-1" style="color: #e6334d; font-weight: 500;">
-                        {{ $errors->first('trial_end') }}
-                    </div>
-                @endif
-            </div>
-            <div class="form-group">
-                {!! Form::label('trial_type', trans('cruds.user.fields.trial_type')) !!}
-                <div>
-                    {!! Form::select('trial_type', $trial_types, old('trial_type') ? old('trial_type') : $user->trial_type, ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
-                </div>
-                @if($errors->has('trial_type'))
-                    <div class="mt-1" style="color: #e6334d; font-weight: 500;">
-                        {{ $errors->first('trial_type') }}
-                    </div>
-                @endif
-            </div>
             <div class="form-group">
                 {!! Form::label('status', trans('cruds.user.fields.status')) !!}
                 <div>
@@ -130,17 +83,33 @@
     </div>
 </div>
 @endsection
-@section('scripts')
-@parent
-    <script src="{{ asset('admin_assets/libs/select2/select2.min.js') }}"></script>
-    <script src="{{ asset('admin_assets/js/pages/datatables.init.js') }}"></script>
-    <script src="{{ asset('admin_assets/libs/flatpickr/flatpickr.min.js') }}"></script>
 
+@push('css')
+    <!-- third party css -->
+    <link href="{{ asset('assets/libs/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- third party css end -->
+    <style>
+        .select2-container--default .select2-selection--multiple .select2-selection__choice
+        {
+            background-color: #3a3a3a;
+        }
+        .select2-container{
+            width: 100% !important;
+        }
+        .select2-selection--single{
+            height: 32px !important;
+            border-color: #ced4da !important;
+        }
+    </style>
+@endpush
+
+@push('js')
+    <!-- third party js -->
+    <script src="{{ asset('assets/libs/select2/select2.min.js') }}"></script>
     <script>
         $(document).ready(function(){
             $('[data-toggle="select2"]').select2()
-            $("#trial_start").flatpickr();
-            $("#trial_end").flatpickr();
         });
     </script>
-@endsection
+    <!-- third party js end -->
+@endpush

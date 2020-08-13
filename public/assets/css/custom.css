@@ -9,5 +9,10 @@ label.error {
 }
 .mt-6
 {
-    margin-top: 10rem!important;
+    margin-top: 10rem !important;
+}
+.badge
+{
+    font-size: 0.8rem;
+    font-weight: 100;
 }

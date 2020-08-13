@@ -39,7 +39,7 @@
 
                                     <div class="form-group mb-3">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="checkbox-signin" checked="">
+                                            <input type="checkbox" class="custom-control-input" id="checkbox-signin">
                                             <label class="custom-control-label" for="checkbox-signin"> @lang('global.remember_me') </label>
                                         </div>
                                     </div>

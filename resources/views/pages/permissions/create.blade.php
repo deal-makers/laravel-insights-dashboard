@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 @section('content')
 
 <!-- start page title -->
@@ -8,7 +8,7 @@
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.permissions.index') }}">
+                        <a href="{{ route('permissions.index') }}">
                             {{ trans('cruds.permission.title_singular') }}
                         </a>
                     </li>
@@ -24,7 +24,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route("admin.permissions.store") }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route("permissions.store") }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                         {!! Form::label('name', trans('cruds.permission.fields.title')."*", ['class' => 'col-md-12']) !!}

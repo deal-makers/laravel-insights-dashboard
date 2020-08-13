@@ -11,7 +11,7 @@
                             {{ trans('cruds.user.title_singular') }}
                         </a>
                     </li>
-                    <li class="breadcrumb-item active">{{ trans('global.login_password') }}</li>
+                    <li class="breadcrumb-item active">{{ trans('global.change_password') }}</li>
                 </ol>
             </div>
             <h4 class="page-title">@lang('global.change_password')</h4>
@@ -30,8 +30,7 @@
                 @if($errors->first() == "Current password is incorrect")
                     <div class="mt-1" style="color: #e6334d; font-weight: 500;">
                         {{ $errors->first() }}
-                    </div>
-                @endif
+                    </div>@endif
             </div>
             <div class="form-group {{ $errors->has('new_password') ? 'has-error' : '' }}">
                 <label for="new_password">New password *</label>

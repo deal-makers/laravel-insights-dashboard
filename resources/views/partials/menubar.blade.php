@@ -11,19 +11,19 @@
             <ul class="nav-second-level" aria-expanded="false">
                 <li>
                     <a href="{{ route('permissions.index') }}">
-                        <i class="fa-fw fas fa-unlock-alt"></i>
+                        <i class="fe-unlock"></i>
                         <span> {{ trans('cruds.permission.title') }} </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('roles.index') }}">
-                        <i class="fa-fw fas fa-briefcase"></i>
+                        <i class="fe-briefcase"></i>
                         <span> {{ trans('cruds.role.title') }} </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('users.index') }}">
-                        <i class="fa-fw fas fa-user"></i>
+                        <i class="fe-user"></i>
                         <span> {{ trans('cruds.user.title') }} </span>
                     </a>
                 </li>

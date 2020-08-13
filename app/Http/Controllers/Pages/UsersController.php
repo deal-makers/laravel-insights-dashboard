@@ -25,7 +25,7 @@ class UsersController extends Controller
 
         $users = User::all();
 
-        return view('admin.users.index', compact('users'));
+        return view('pages.users.index', compact('users'));
     }
 
     /**
@@ -39,9 +39,9 @@ class UsersController extends Controller
             return abort(401);
         }
         $roles = Role::get()->pluck('name', 'name');
-        $status = array("Pending"=>"Pending", "Approve"=>"Approve", "Reject"=>"Reject");
+        $status = ["Pending", "Approve", "Reject"];
 
-        return view('admin.users.create', compact('roles', 'status', 'trial_types'));
+        return view('pages.users.create', compact('roles', 'status'));
     }
 
     /**
@@ -59,7 +59,7 @@ class UsersController extends Controller
         $roles = $request->input('roles') ? $request->input('roles') : [];
         $user->assignRole($roles);
         
-        return redirect()->route('admin.users.index');
+        return redirect()->route('users.index');
     }
 
 
@@ -76,9 +76,8 @@ class UsersController extends Controller
         }
         $roles = Role::get()->pluck('name', 'name');
 
-        $status = array("Pending"=>"Pending", "Approve"=>"Approve", "Reject"=>"Reject");
-        $trial_types = array("0"=>"Basic", "1"=>"Pro");
-        return view('admin.users.edit', compact('user', 'roles', 'status', 'trial_types'));
+        $status = array("Pending", "Approve", "Reject");
+        return view('pages.users.edit', compact('user', 'roles', 'status'));
     }
 
     /**
@@ -95,20 +94,11 @@ class UsersController extends Controller
         }
 
         $user->update($request->all());
-        if (isset($request->trial_start) && isset($request->trial_end))
-        {
-            $user->trial_start = $request->trial_start;
-            $user->trial_end = $request->trial_end;
-            $user->save();
-        }
-        if (isset($request->trial_type)) {
-            $user->trial_type = $request->trial_type;
-            $user->save();
-        }
+        
         $roles = $request->input('roles') ? $request->input('roles') : [];
         $user->syncRoles($roles);
 
-        return redirect()->route('admin.users.index');
+        return redirect()->route('users.index');
     }
 
     public function show(User $user)
@@ -119,7 +109,7 @@ class UsersController extends Controller
 
         $user->load('roles');
 
-        return view('admin.users.show', compact('user'));
+        return view('pages.users.show', compact('user'));
     }
 
     /**
@@ -136,7 +126,7 @@ class UsersController extends Controller
 
         $user->delete();
 
-        return redirect()->route('admin.users.index');
+        return redirect()->route('users.index');
     }
 
     /**
