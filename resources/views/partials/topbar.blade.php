@@ -3,7 +3,12 @@
 
     <li class="dropdown notification-list">
         <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-            <img src="{{ asset('assets/images/users/default.png') }}" alt="user-image" class="rounded-circle">
+            <img src="@if(is_null(Auth::user()->avatar) || empty(Auth::user()->avatar))
+            {{ asset('assets/images/users/default.png') }}
+            @else
+            {{ asset('storage/images/avatars')."/".Auth::user()->avatar }}
+            @endif
+            " alt="user-image" class="rounded-circle">
             <span class="pro-user-name ml-1">
                 {{ Auth::user()->name }} <i class="mdi mdi-chevron-down"></i>
             </span>

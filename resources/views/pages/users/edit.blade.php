@@ -74,6 +74,13 @@
                     </div>
                 @endif
             </div>
+            <div class="form-group">
+                {!! Form::label('avatar', trans('cruds.user.fields.avatar')) !!}
+                <div class="col-md-2">
+                <input type="file" name="photo" class="dropify" 
+                data-allowed-file-extensions="jpg png gif tif jpeg" />
+                </div>
+            </div>
             <div>
                 <input class="btn btn-danger" type="submit" value="{{ trans('global.save') }}">
             </div>
@@ -87,6 +94,8 @@
 @push('css')
     <!-- third party css -->
     <link href="{{ asset('assets/libs/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/libs/dropify/dropify.min.css') }}" rel="stylesheet" type="text/css" />
+
     <!-- third party css end -->
     <style>
         .select2-container--default .select2-selection--multiple .select2-selection__choice
@@ -106,9 +115,21 @@
 @push('js')
     <!-- third party js -->
     <script src="{{ asset('assets/libs/select2/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/dropify/dropify.min.js') }}"></script>
     <script>
         $(document).ready(function(){
-            $('[data-toggle="select2"]').select2()
+            $('[data-toggle="select2"]').select2();
+            
+            @if(is_null($user->avatar) || empty($user->avatar))
+            $('.dropify').dropify({
+                defaultFile: "{{ asset('assets/images/users/default.png') }}"
+            });
+            @else
+            $('.dropify').dropify({
+                defaultFile: "{{ asset('storage/images/avatars').'/'.$user->avatar }}"
+            });             
+            @endif
+
         });
     </script>
     <!-- third party js end -->

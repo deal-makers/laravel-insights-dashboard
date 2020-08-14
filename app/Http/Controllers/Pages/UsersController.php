@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Pages\StoreUsersRequest;
 use App\Http\Requests\Pages\UpdateUsersRequest;
+use Illuminate\Support\Facades\Storage;
+use Image;
 
 class UsersController extends Controller
 {
@@ -55,6 +57,21 @@ class UsersController extends Controller
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
+
+        if ($request->hasFile('photo')) {
+            $image      = $request->file('photo');
+            $fileName   = time() . '.' . $image->getClientOriginalExtension();
+
+            $img = Image::make($image->getRealPath());
+            $img->resize(120, 120, function ($constraint) {
+                $constraint->aspectRatio();                 
+            });
+
+            $img->stream(); // <-- Key point
+            Storage::disk('local')->put('public/images/avatars'.'/'.$fileName, $img, 'public');
+            $request->request->add(['avatar' => $fileName]); //add request
+        }
+
         $user = User::create($request->all());
         $roles = $request->input('roles') ? $request->input('roles') : [];
         $user->assignRole($roles);
@@ -93,6 +110,23 @@ class UsersController extends Controller
             return abort(401);
         }
 
+        if ($request->hasFile('photo')) {
+            if(!is_null($user->avatar) && !empty($user->avatar))
+                Storage::delete("images/avatars/".$user->avatar);
+         
+            $image      = $request->file('photo');
+            $fileName   = time() . '.' . $image->getClientOriginalExtension();
+
+            $img = Image::make($image->getRealPath());
+            $img->resize(120, 120, function ($constraint) {
+                $constraint->aspectRatio();                 
+            });
+
+            $img->stream(); // <-- Key point
+            Storage::disk('local')->put('public/images/avatars'.'/'.$fileName, $img, 'public');
+            $request->request->add(['avatar' => $fileName]); //add request
+        }
+
         $user->update($request->all());
         
         $roles = $request->input('roles') ? $request->input('roles') : [];
@@ -123,6 +157,9 @@ class UsersController extends Controller
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
+
+        if(!is_null($user->avatar) && !empty($user->avatar))
+            Storage::delete("images/avatars/".$user->avatar);
 
         $user->delete();
 

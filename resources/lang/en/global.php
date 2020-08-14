@@ -56,7 +56,8 @@ return [
     'search_input_too_short'               => 'Please enter :count or more characters',
     'show'                                 => 'Show',
     'systemCalendar'                       => 'Calendar',
-    'system'                               => 'System',
+    '
+    '                               => 'System',
     'thankYouForUsingOurApplication'       => 'Thank you for using our website',
     'timeFrom'                             => 'From',
     'timeTo'                               => 'To',

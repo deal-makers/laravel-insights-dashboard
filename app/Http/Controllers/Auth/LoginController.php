@@ -106,8 +106,7 @@ class LoginController extends Controller
      */
     protected function authenticated(\Illuminate\Http\Request $request, $user)
     {
-        // if ($user->hasRole("administrator"))
-        //     return redirect()->to("/admin/dashboard");
-        // return redirect()->to("/user/dashboard");
+        
+        
     }
 }

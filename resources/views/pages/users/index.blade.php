@@ -50,7 +50,13 @@
                         @foreach($users as $key => $user)
                             <tr data-entry-id="{{ $user->id }}">
                                 <td>
-                                    {{ $user->name ?? '' }}
+                                        <img src="@if(is_null($user->avatar) || empty($user->avatar))
+                                        {{ asset('assets/images/users/default.png') }}
+                                        @else
+                                        {{ asset('storage/images/avatars')."/$user->avatar" }}
+                                        @endif
+                                        " class="rounded-circle" alt="" height="50" width="50">
+                                        {{ $user->name ?? '' }}
                                 </td>
                                 <td>
                                     {{ $user->email ?? '' }}
