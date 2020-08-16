@@ -29,7 +29,7 @@
                                     
                                     <div class="form-group mb-3">
                                         <label for="email">@lang("global.login_email")</label>
-                                        <input class="form-control" type="email" name="email" value="{{ old('email') }}" required="" placeholder="@lang("global.login_email_placeholder")">
+                                        <input class="form-control" autofocus type="email" name="email" value="{{ old('email') }}" required="" placeholder="@lang("global.login_email_placeholder")">
                                     </div>
                                     
                                     <div class="form-group mb-3">

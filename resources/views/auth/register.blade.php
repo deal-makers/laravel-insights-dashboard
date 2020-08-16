@@ -28,7 +28,7 @@
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <div class="form-group mb-3">
                                         <label for="name">@lang("global.user_name")</label>
-                                        <input class="form-control" name="name" value="{{ old('name') }}" required="" placeholder="@lang("global.signup_name_placeholder")">
+                                        <input class="form-control" autofocus name="name" value="{{ old('name') }}" required="" placeholder="@lang("global.signup_name_placeholder")">
                                     </div>
                                     
                                     <div class="form-group mb-3">
