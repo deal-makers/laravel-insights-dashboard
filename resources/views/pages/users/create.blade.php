@@ -26,7 +26,7 @@
                 <form action="{{ route("users.store") }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
-                        <label for="name">{{ trans('cruds.user.fields.name') }}*</label>
+                        <label for="name">{{ trans('cruds.user.fields.name') }}<span class="text-danger">*</span></label>
                         <input type="text" id="name" name="name" class="form-control" value="{{ old('name', isset($user) ? $user->name : '') }}" required>
                         @if($errors->has('name'))
                             <div class="mt-1" style="color: #e6334d; font-weight: 500;">
@@ -35,11 +35,20 @@
                         @endif
                     </div>
                     <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
-                        <label for="email">{{ trans('cruds.user.fields.email') }}*</label>
+                        <label for="email">{{ trans('cruds.user.fields.email') }}<span class="text-danger">*</span></label>
                         <input type="email" id="email" name="email" class="form-control" value="{{ old('email', isset($user) ? $user->email : '') }}" required>
                         @if($errors->has('email'))
                             <div class="mt-1" style="color: #e6334d; font-weight: 500;">
                                 {{ $errors->first('email') }}
+                            </div>
+                        @endif
+                    </div>
+                    <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
+                        <label for="email">{{ trans('cruds.user.fields.phone') }}</label>
+                        <input type="text" id="phone" name="phone" class="form-control" data-toggle="input-mask" data-mask-format="(00) 0000-0000" maxlength="14" value="{{ old('phone', isset($user) ? $user->phone : '') }}" required>
+                        @if($errors->has('phone'))
+                            <div class="mt-1" style="color: #e6334d; font-weight: 500;">
+                                {{ $errors->first('phone') }}
                             </div>
                         @endif
                     </div>
@@ -115,6 +124,11 @@
     <!-- third party js -->
     <script src="{{ asset('assets/libs/select2/select2.min.js') }}"></script>
     <script src="{{ asset('assets/libs/dropify/dropify.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/jquery-mask-plugin/jquery.mask.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/autonumeric/autoNumeric-min.js') }}"></script>
+    <!-- Init js-->
+    <script src="{{ asset('assets/js/pages/form-masks.init.js') }}"></script>
+    
     <script>
         $(document).ready(function(){
             $('[data-toggle="select2"]').select2();

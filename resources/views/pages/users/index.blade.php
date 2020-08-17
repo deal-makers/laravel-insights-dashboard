@@ -24,7 +24,7 @@
         <div class="card">
             <div class="card-body">
                 <a class="btn btn-success mb-3" href="{{ route('users.create') }}">
-                    {{ trans('global.add') }} {{ trans('cruds.user.title_singular') }}
+                   <i class="fe-plus"></i> {{ trans('global.add') }} {{ trans('cruds.user.title_singular') }}
                 </a>
                 <table id="datatable" class="table dt-responsive nowrap">
                     <thead>
@@ -34,6 +34,9 @@
                             </th>
                             <th>
                                 {{ trans('cruds.user.fields.email') }}
+                            </th>
+                            <th>
+                                {{ trans('cruds.user.fields.phone') }}
                             </th>
                             <th>
                                 {{ trans('cruds.user.fields.roles') }}
@@ -62,6 +65,9 @@
                                     {{ $user->email ?? '' }}
                                 </td>
                                 <td>
+                                    {{ $user->phone ?? '' }}
+                                </td>
+                                <td>
                                     @foreach($user->roles()->pluck('name') as $role)
                                         <span class="badge badge-info">{{ $role }}</span>
                                     @endforeach
@@ -77,13 +83,17 @@
                                 </td>
                                 <td>
                                     <a class="btn btn-xs btn-info" href="{{ route('users.edit', $user->id) }}">
+                                        <i class='fe-edit'></i>
                                         {{ trans('global.edit') }}
                                     </a>
 
                                     <form action="{{ route('users.destroy', $user->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
+                                        <button type="submit" class="btn btn-xs btn-danger">
+                                            <i class='fe-trash'></i>
+                                            @lang('global.delete')
+                                        </button>
                                     </form>
                                 </td>
                             </tr>
@@ -143,29 +153,8 @@
                     $('.dataTables_scrollBody').css('min-height', '460px');
                     $('div.dataTables_scrollBody table tbody tr:last td').attr('style', 'border-bottom:solid 1px #8080805c;')
                 },
-                "order": [[ 0, "asc" ]]
+                "order": [[ 0, "desc" ]]
             });
         });
-
-        function isConfirm(form)
-        {
-            event.preventDefault();
-            swal({
-                title: "{{ trans('global.areYouSure') }}",
-                text: "{{ trans('global.canNotRevert') }}",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger m-l-10',
-                confirmButtonText: "{{ trans('global.yesDelete') }}"
-            }).then((result) => {
-                if (result.value) {
-                    $(form).submit();
-                } else
-                {
-                    return false;
-                }
-            });
-        }
     </script>
 @endpush

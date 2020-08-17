@@ -101,4 +101,16 @@ return [
             'status'                   => 'Status',
         ],
     ],
+    'detections'        => [
+
+        'fields' => [
+
+        ],
+    ],
+    'tags'        => [
+
+        'fields' => [
+
+        ],
+    ],
 ];
