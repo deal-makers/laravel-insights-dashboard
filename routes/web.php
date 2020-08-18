@@ -18,6 +18,7 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('change_password', 'Auth\ChangePasswordController@changePassword')->name('auth.change_password');
     Route::resource('detections', 'Pages\DetectionsController');
     Route::resource('tags', 'Pages\TagsController');
+    Route::post('tagupdate/{tag}', 'Pages\TagsController@ajaxUpdate');
 });
 
 Route::get('approval', 'User\DashboardController@approval')->name('approval');

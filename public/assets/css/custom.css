@@ -16,3 +16,8 @@ label.error {
     font-size: 0.8rem;
     font-weight: 100;
 }
+.require_error
+{
+    color: #e6334d;
+    font-weight: 500;
+}

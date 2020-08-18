@@ -7,7 +7,6 @@ return [
     'add'                                  => 'Add',
     'business'                             => 'Business',
     'detections'                           => 'Detections',
-    'tags'                                 => 'Tags',
     'group'                                => 'Group',
     'close'                                => 'Close',
     'by group'                             => 'By Group',

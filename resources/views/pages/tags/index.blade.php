@@ -41,15 +41,21 @@
                                     {{ $row->id ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $row->group ?? '' }}
+                                    @if($row->group == 0)
+                                    Global
+                                    @elseif($row->group == 1)
+                                    NIST
+                                    @else
+                                    MITER Att & Ck
+                                    @endif
                                 </td>
                                 <td>
                                     {{ $row->tag ?? '' }}
                                 </td>
                                 <td>
-                                    <a class="btn btn-xs btn-info" href="javascript:openEditModal(this);">
+                                    <a class="btn btn-xs btn-info" href="javascript:openEditModal('{{ $row->group ?? 0}}', '{{ $row->tag ?? '' }}', '{{ $row->id ?? '' }}');">
                                         <i class='fe-edit'></i>
-                                        {{ trans('tags.edit') }}
+                                        {{ trans('global.edit') }}
                                     </a>
                                     <form action="{{ route('tags.destroy', $row->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
@@ -80,17 +86,20 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="tag_group" class="control-label">@lang('global.group')</label>
+                            <label for="tag_group" class="control-label">@lang('global.group') <span class="text-danger">*</span></label>
                             {!! Form::select('tag_group', ["Global", "NIST", "MITER Att & Ck"], 0, ['id' => 'tag_group', 'class' => 'form-control']) !!}
-                            <label for="tag" class="control-label mt-1">@lang('global.tag')</label>
+                            <label for="tag" class="control-label mt-1">@lang('global.tag') <span class="text-danger">*</span></label>
                             <input type="text" required class="form-control" value="" id="tag">
+                            <span class="mt-1 require_error" id="tag_error"></span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
+                <input type="hidden" id="edit_tag" />
+                <input type="hidden" id="tag_val" />
                 <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">@lang('global.close')</button>
-                <button type="button" class="btn btn-info waves-effect waves-light" onclick="saveData()">@lang('global.save')</button>
+                <button type="button" class="btn btn-info waves-effect waves-light" id="modal-btn-save" action-type="create" onclick="saveData()" >@lang('global.save')</button>
             </div>
         </div>
     </div>
@@ -147,15 +156,83 @@
                 },
                 "order": [[ 0, "asc" ]]
             });
+
+            $("input").on('keyup', function (e) {
+                if (e.key === 'Enter' || e.keyCode === 13) {
+                    saveData();
+                }
+            });
         });
         let openCreateModal = () => {
             $('.modal-title').text("{{ trans('global.add') }} {{ trans('global.tag') }}");
+            $('#edit_tag').val('');
+            $("#tag_error").text('');
+            $('#modal-btn-save').attr('action-type', 'create');
             $('#data-modal').modal({backdrop:'static',keyboard:false, show:true});
         }
 
-        let openEditModal = (obj) => {
+        let openEditModal = (group, tag, id) => {
             $('.modal-title').text("{{ trans('global.edit') }} {{ trans('global.tag') }}");
-            $('.modal-title').text("{{ trans('global.add') }} {{ trans('global.tag') }}");
+            $('#modal-btn-save').attr('action-type', 'edit');
+            $('#edit_tag').val(id);
+            $('#tag_group').val(group);
+            $("#tag_error").text('');
+            $('#tag').val(tag);
+            $('#tag_val').val(tag);
+            $('#data-modal').modal({backdrop:'static',keyboard:false, show:true});
+        }
+
+        let saveData = () => {
+            let group = $('#tag_group').val();
+            let tag = $('#tag').val();
+            if(tag == '') 
+            {
+                $('#tag').focus();
+                @php
+                    $filed = strtolower(trans('global.tag'));
+                @endphp
+                $("#tag_error").text('{{ trans('validation.filled', ['attribute' => $filed]) }}');
+                return false;
+            }
+            let action_type = $('#modal-btn-save').attr('action-type');
+            if(action_type == 'create')
+            {
+                $.ajax({
+                    url: "{{ route('tags.store') }}",
+                    data: {group: group, tag: tag},
+                    type: 'POST',
+                    dataType: 'json', // added data type
+                    success: function(res) {
+                        location.reload();
+                    },
+                    error: function(jqXHR, exception)
+                    {
+                        $.each(jqXHR.responseJSON, function(key, val) {
+                            $("#tag_error").text(val[0]);
+                        });
+                    }
+                });
+            } else
+            {
+                let tag_id = $('#edit_tag').val();
+                let change_flag = 0;
+                if($('#tag_val').val() != tag) change_flag = 1;
+                $.ajax({
+                    url: "{{ url('tagupdate') }}" + `/${tag_id}`,
+                    data: {group: group, tag: tag, change_flag: change_flag},
+                    type: 'POST',
+                    dataType: 'json', // added data type
+                    success: function(res) {
+                        location.reload();
+                    },
+                    error: function(jqXHR, exception)
+                    {
+                        $.each(jqXHR.responseJSON, function(key, val) {
+                            $("#tag_error").text(val[0]);
+                        });
+                    }
+                });
+            }
         }
 
         $('#data-modal').on('shown.bs.modal', function () {
