@@ -11,10 +11,10 @@
                             {{ trans('global.dashboard') }}
                         </a>
                     </li>
-                    <li class="breadcrumb-item active">{{ trans('cruds.role.title_singular') }}</li>
+                    <li class="breadcrumb-item active">{{ trans('global.detections') }}</li>
                 </ol>
             </div>
-            <h4 class="page-title">{{ trans('cruds.role.title_singular') }}</h4>
+            <h4 class="page-title">{{ trans('global.detections') }}</h4>
         </div>
     </div>
 </div>
@@ -22,39 +22,39 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <a class="btn btn-success mb-3" href="{{ route('roles.create') }}">
-                    <i class="fe-plus"></i> {{ trans('global.add') }} {{ trans('cruds.role.title_singular') }}
+                <a class="btn btn-success mb-3" href="{{ route('detections.create') }}">
+                    <i class="fe-plus"></i> {{ trans('global.add') }} {{ trans('cruds.detections.title') }}
                 </a>
                 <table id="datatable" class="table dt-responsive nowrap">
                     <thead>
                         <tr>
-                            <th>{{ trans('cruds.permission.fields.id') }}</th>
-                            <th>{{ trans('cruds.role.fields.title') }}</th>
-                            <th>{{ trans('cruds.role.fields.permissions') }}</th>
+                            <th>{{ trans('cruds.detections.fields.id') }}</th>
+                            <th>{{ trans('cruds.detections.fields.title') }}</th>
+                            <th>{{ trans('cruds.detections.fields.datetime') }}</th>
+                            <th>{{ trans('cruds.detections.fields.category') }}</th>
+                            <th>{{ trans('cruds.detections.fields.analyst') }}</th>
                             <th>#</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($roles as $key => $role)
+                        @foreach($detections as $key => $row)
                             <tr data-entry-id="{{ $role->id }}">
                                 <td>
-                                    {{ $role->id ?? '' }}
+                                    {{ $row->id ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $role->name ?? '' }}
+                                    {{ $row->title ?? '' }}
                                 </td>
                                 <td>
-                                    @foreach($role->permissions()->pluck('name') as $permission)
-                                        <span class="badge badge-info">{{ $permission }}</span>
-                                    @endforeach
+
                                 </td>
                                 <td>
-                                    <a class="btn btn-xs btn-info" href="{{ route('roles.edit', $role->id) }}">
+                                    <a class="btn btn-xs btn-info" href="{{ route('detections.edit', $role->id) }}">
                                         <i class='fe-edit'></i>
                                         {{ trans('global.edit') }}
                                     </a>
 
-                                    <form action="{{ route('roles.destroy', $role->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
+                                    <form action="{{ route('detections.destroy', $role->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-xs btn-danger">

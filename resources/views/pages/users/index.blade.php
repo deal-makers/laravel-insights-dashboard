@@ -19,6 +19,7 @@
     </div>
 </div>
 <!-- end page title -->
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -45,7 +46,6 @@
                                 {{ trans('cruds.user.fields.status') }}
                             </th>
                             <th>
-                                &nbsp;
                             </th>
                         </tr>
                     </thead>

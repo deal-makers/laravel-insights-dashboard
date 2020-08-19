@@ -102,9 +102,18 @@ return [
         ],
     ],
     'detections'        => [
+        'title'  => 'Detection',
 
         'fields' => [
-
+            'id'                    => 'Id',
+            'title'                 => 'Title',
+            'datetime'              => 'Date and Hour',
+            'category'              => 'Category',
+            'analyst'               => 'Analyst',
+            'description'           => 'Description',
+            'dectection_level'      => 'Detection Level',
+            'mark_read'             => 'Mark Read',
+            'send_feedback'         => 'Send Feedback',
         ],
     ],
     'tags'        => [
@@ -113,4 +122,5 @@ return [
 
         ],
     ],
+
 ];

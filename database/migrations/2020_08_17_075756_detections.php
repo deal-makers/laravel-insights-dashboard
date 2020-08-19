@@ -16,20 +16,23 @@ class Detections extends Migration
         Schema::create('detections', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
-            $table->integer('client_id');
-            $table->string('tags')->nullable();
             $table->string('title');
+            $table->integer('type')->default(0);
             $table->integer('emergency')->default(0);
             $table->integer('detection_level')->default(0);
             $table->integer('tlp')->default(0);
             $table->integer('pap')->default(0);
+            $table->text('client_send_ids')->nullable();
+            $table->string('tags')->nullable();
             $table->text('comment')->nullable();
             $table->text('description')->nullable();
-            $table->text('scenario')->nullable();
+            $table->text('scenery')->nullable();
             $table->text('tech_detail')->nullable();
             $table->text('reference')->nullable();
-            $table->string('evidence')->nullable();
+            $table->text('evidence')->nullable();
             $table->text('ioc')->nullable();
+            $table->text('cves')->nullable();
+            $table->integer('cvss')->default(0);
             
             $table->timestamps();
         });
