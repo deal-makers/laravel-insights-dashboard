@@ -3,6 +3,8 @@
     <head>
         @include('partials.head')
         @stack('css')
+
+
     </head>
     <body>
 
@@ -65,6 +67,6 @@
 
     <!-- Js container -->
         @include('partials.js')
-        
+
     </body>
 </html>

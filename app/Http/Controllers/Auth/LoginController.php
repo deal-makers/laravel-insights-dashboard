@@ -106,7 +106,25 @@ class LoginController extends Controller
      */
     protected function authenticated(\Illuminate\Http\Request $request, $user)
     {
-        
-        
+        //Initialize value store.
+        $emergency = ['Yes', 'No'];
+        $detectionType = ['Information leakage', 'Infrastructure Exposure', 'Critical Vulnerabilities', 'DeepWeb / Darkweb monitoring', 'Identity monitoring', 'Cyber threats', 'Attacks on suppliers', 'Negative brand exposure', 'Analysis of malicious artifacts'];
+        $detectionLevel = ['Committed Resilience', 'Critical', 'High', 'Medium', 'Information'];
+        $tlp = ['TLP:RED', 'TLP:AMBER', 'TLP:GREEN', 'TLP:WHITE'];
+        $pap = ['PAP:RED', 'PAP:AMBER', 'PAP:GREEN', 'PAP:WHITE'];
+        $ioc = ['IP address (V4)', 'URI', 'URL', 'Email address', 'Email Subject', 'Host name', 'Domain name', 'MD5 Hash', 'SHA1 hash', 'SHA256 hash', 'SHA384 hash', 'SHA512 hash', 'Address', 'Asynchronous transfer mode address',
+                'Autonomous System Number (ASN)', 'CIDR rule', 'CVE number', 'Archive', 'File path', 'IMPHASH', 'IP address (V6)', 'IPV4 Netmask', 'IPV4 Network', 'IPV6 Netmask', 'IPV6 Network',
+                'MAC address', 'MUTEX name', 'Observable Composition', 'Organization Name', 'PEHASH', 'Phone number', 'Registration key', 'Serial Number', 'Top-level domain name', 'Unknown', 'Windows Executable File'];
+        $cvss = ['0.0 (None)', '0.1 - 3.9 (Low)', '4.0 - 6.9 (Medium)', '7.0 - 8.9 (High)', '9.0 - 10.0 (Critical)'];
+
+        //Session store.
+        session()->put('emergency', $emergency);
+        session()->put('dec_type', $detectionType);
+        session()->put('dec_level', $detectionLevel);
+        session()->put('tlp', $tlp);
+        session()->put('pap', $pap);
+        session()->put('ioc', $ioc);
+        session()->put('cvss', $cvss);
+
     }
 }

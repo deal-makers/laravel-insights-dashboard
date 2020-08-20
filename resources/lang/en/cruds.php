@@ -102,9 +102,34 @@ return [
         ],
     ],
     'detections'        => [
+        'title'  => 'Detection',
 
         'fields' => [
-
+            'id'                    => 'ID',
+            'dec_id'                => 'Detection ID',
+            'title'                 => 'Title',
+            'datetime'              => 'Date and Hour',
+            'category'              => 'Category',
+            'analyst'               => 'Analyst',
+            'description'           => 'Description',
+            'detection_level'       => 'Detection Level',
+            'mark_read'             => 'Mark Read',
+            'send_feedback'         => 'Send Feedback',
+            'detection_type'        => 'Detection Type',
+            'emergency'             => 'Emergency',
+            'tlp'                   => 'TLP',
+            'pap'                   => 'PAP',
+            'clients_detections'    => 'Clients to send this detection',
+            'tags_detection'        => 'Tags for this detection',
+            'analyst_comments'      => 'Analyst comments',
+            'detection_description' => 'Detection description',
+            'threat_scenery'        => 'Threat scenery',
+            'tech_details'          => 'Technical details',
+            'reference_url'         => 'References (One url per line)',
+            'evidences'             => 'Evidences',
+            'ioc'                   => 'Indicators of Compromise (IOC)',
+            'cves'                  => 'CVES',
+            'cvss'                  => 'CVSS',
         ],
     ],
     'tags'        => [
@@ -113,4 +138,5 @@ return [
 
         ],
     ],
+
 ];
