@@ -28,7 +28,7 @@
                 <table id="datatable" class="table dt-responsive nowrap">
                     <thead>
                         <tr>
-                            <th>{{ trans('cruds.detections.fields.id') }}</th>
+                            <th>{{ trans('cruds.detections.fields.dec_id') }}</th>
                             <th>{{ trans('cruds.detections.fields.title') }}</th>
                             <th>{{ trans('cruds.detections.fields.datetime') }}</th>
                             <th>{{ trans('cruds.detections.fields.category') }}</th>
@@ -38,23 +38,29 @@
                     </thead>
                     <tbody>
                         @foreach($detections as $key => $row)
-                            <tr data-entry-id="{{ $role->id }}">
+                            <tr data-entry-id="{{ $row->id }}">
                                 <td>
-                                    {{ $row->id ?? '' }}
+                                    {{ $row->dec_id ?? '' }}
                                 </td>
                                 <td>
                                     {{ $row->title ?? '' }}
                                 </td>
                                 <td>
-
+                                    {{ $row->created_at }}
                                 </td>
                                 <td>
-                                    <a class="btn btn-xs btn-info" href="{{ route('detections.edit', $role->id) }}">
+                                    {{ session('dec_type')[$row->type] ?? '' }}
+                                </td>
+                                <td>
+                                    {{ \App\User::Find($row->user_id)->name ?? '' }}
+                                </td>
+                                <td>
+                                    <a class="btn btn-xs btn-info" href="{{ route('detections.edit', $row->id) }}">
                                         <i class='fe-edit'></i>
                                         {{ trans('global.edit') }}
                                     </a>
 
-                                    <form action="{{ route('detections.destroy', $role->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
+                                    <form action="{{ route('detections.destroy', $row->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-xs btn-danger">

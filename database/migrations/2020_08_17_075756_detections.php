@@ -33,7 +33,7 @@ class Detections extends Migration
             $table->text('evidence')->nullable();
             $table->text('ioc')->nullable();
             $table->text('cves')->nullable();
-            $table->integer('cvss')->default(0);
+            $table->integer('cvss')->nullable();
             
             $table->timestamps();
         });

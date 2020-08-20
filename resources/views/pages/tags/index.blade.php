@@ -185,7 +185,7 @@
         let saveData = () => {
             let group = $('#tag_group').val();
             let tag = $('#tag').val();
-            if(tag == '') 
+            if(tag == '')
             {
                 $('#tag').focus();
                 @php

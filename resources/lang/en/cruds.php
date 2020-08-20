@@ -105,7 +105,8 @@ return [
         'title'  => 'Detection',
 
         'fields' => [
-            'id'                    => 'Id',
+            'id'                    => 'ID',
+            'dec_id'                => 'Detection ID',
             'title'                 => 'Title',
             'datetime'              => 'Date and Hour',
             'category'              => 'Category',
