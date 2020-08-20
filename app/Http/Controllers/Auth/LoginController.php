@@ -106,7 +106,12 @@ class LoginController extends Controller
      */
     protected function authenticated(\Illuminate\Http\Request $request, $user)
     {
-        
+        //Initialize value store.
+        $emergencies = ['Yes', 'No'];
+        $detectionType = ['Information leakage', 'Infrastructure Exposure', 'Critical Vulnerabilities', 'DeepWeb / Darkweb monitoring', 'Identity monitoring', 'Cyber threats', 'Attacks on suppliers', 'Negative brand exposure', 'Analysis of malicious artifacts'];
+        $detectionLevel = ['Committed Resilience', 'Critical', 'High', 'Medium', 'Information'];
+
+
         
     }
 }

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
+use App\Models\Tags;
+
 class DetectionsController extends Controller
 {
     /**
@@ -34,7 +36,13 @@ class DetectionsController extends Controller
      */
     public function create()
     {
-        //
+        if (! Gate::allows('users_manage')) {
+            return abort(401);
+        }
+
+        $tags = Tags::all();
+
+        return view('pages.detections.create', compact('tags'));
     }
 
     /**

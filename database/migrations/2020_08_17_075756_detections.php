@@ -15,6 +15,7 @@ class Detections extends Migration
     {
         Schema::create('detections', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('dec_id');
             $table->integer('user_id');
             $table->string('title');
             $table->integer('type')->default(0);
