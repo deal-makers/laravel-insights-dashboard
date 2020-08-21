@@ -200,7 +200,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group {{ $errors->has('references') ? 'has-error' : '' }}">
@@ -215,7 +214,6 @@
                                     @endif
                                 </div>
                             </div>
-                            @if(isset($detection) && $detection->type == 2)
                             <div class="hidden-flag col-md-4">
                                 <div class="form-group {{ $errors->has('cves') ? 'has-error' : '' }}">
                                     <label for="cves">{{ trans('cruds.detections.fields.cves') }}</label>
@@ -232,7 +230,7 @@
                             <div class="hidden-flag col-md-4">
                                 <div class="form-group {{ $errors->has('cvss') ? 'has-error' : '' }}">
                                     <label for="cvss">{{ trans('cruds.detections.fields.cvss') }}</label>
-                                    {!! Form::select('type', $cvss, old('cvss', isset($detection) ? $detection->cvss : ''), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
+                                    {!! Form::select('cvss', $cvss, old('cvss', isset($detection) ? $detection->cvss : ''), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
                                     @if($errors->has('cvss'))
                                         <div class="mt-1 require_error">
                                             {{ $errors->first('cvss') }}
@@ -240,7 +238,6 @@
                                     @endif
                                 </div>
                             </div>
-                            @endif
                         </div>
                         <button class="btn btn-danger" type="submit"><i class="mdi mdi-send mr-1"></i> {{ trans('global.save') }}</button>
                     </form>
@@ -287,16 +284,21 @@
             border: none;
         }
         .ajax-file-upload-filename {
-            width: 275px;
+            width: 100%;
             font-size: 12px;
         }
         .ajax-file-upload-statusbar
         {
-            width: 285px !important;
+            width: 100% !important;
+            border: 1px solid #dddddd !important;
         }
         .ajax-file-upload-container
         {
             margin: 0px 0px 0px 0px;
+        }
+        .ajax-file-upload-progress
+        {
+            width: 98% !important;
         }
         .ajax-file-upload-container
         {
@@ -346,6 +348,9 @@
     <script>
         $(document).ready(function(){
             $('[data-toggle="select2"]').select2();
+            @if(isset($detection) && $detection->type != 2)
+            $('.hidden-flag').hide();
+            @endif
             $('#references').tagify({
                 delimiters:",",
                 pattern:/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/,
@@ -382,7 +387,7 @@
                 },
                 deleteCallback: function (data, pd) {
                     for (var i = 0; i < data.length; i++) {
-                        $.post("{{ url('delete_file') }}", {op: "delete", name: data[i]},
+                        $.post("{{ url('delete_file') }}" + "?id=" + "{{ $detection->id }}", {op: "delete", name: data[i]},
                             function (resp,textStatus, jqXHR) {
                                 //Show Message
                             });
@@ -406,7 +411,7 @@
             });
 
             $('#type').change(function(){
-                if($(this).val() === '2')
+                if($(this).val() == '2')
                 {
                     $('.hidden-flag').show();
                 } else {

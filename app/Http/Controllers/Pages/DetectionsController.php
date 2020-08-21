@@ -207,6 +207,14 @@ class DetectionsController extends Controller
                     unset($curFileLst[$key]);
                 }
                 session()->put('attach_files', $curFileLst);
+                if(isset($request->id))
+                {
+                    $curFileLst = unserialize(Detection::find($request->id)->evidence);
+                    if (($key = array_search($fileName, $curFileLst)) !== false) {
+                        unset($curFileLst[$key]);
+                    }
+                    Detection::find($request->id)->update(['evidence' => serialize($curFileLst)]);
+                }
                 return new JsonResponse($curFileLst);
             }
         }
@@ -223,19 +231,22 @@ class DetectionsController extends Controller
         if(request()->ajax()) {
             $dir = asset('storage/upload/files');
             $dec_id = $request->id;
-            $evidence = session('attach_files');
-            $ret = array();
-            foreach ($evidence as $file) {
-                if ($file == "." || $file == "..")
-                    continue;
-                $filePath = $dir . "/" . $file;
-                $details = array();
-                $details['name'] = $file;
-                $details['path'] = $filePath;
-                $details['size'] = $this->getFileSize($filePath);
-                $ret[] = $details;
+            $evidence = unserialize(Detection::find($dec_id)->evidence) ?? [];
+            $ret = [];
+            if(is_array($evidence))
+            {
+                foreach ($evidence as $file) {
+                    if ($file == "." || $file == "..")
+                        continue;
+                    $filePath = $dir . "/" . $file;
+                    $details = array();
+                    $details['name'] = $file;
+                    $details['path'] = $filePath;
+                    $details['size'] = $this->getFileSize($filePath);
+                    $ret[] = $details;
+                }
+                return new JsonResponse($ret);
             }
-            echo json_encode($ret);
         }
     }
 
@@ -310,12 +321,10 @@ class DetectionsController extends Controller
         $clients = User::whereHas('roles', function($role) {
             $role->where('name', '=', 'client');
         })->pluck('name', 'id');
-
-        $attachFiles = session('attach_files');
-        if(!isset($attachFiles))
-        {
+        if(is_array(unserialize($detection->evidence)))
             session()->put('attach_files', unserialize($detection->evidence));
-        }
+        else
+            session()->put('attach_files', []);
         return view('pages.detections.edit', compact('detection', 'tags','clients', 'emergency', 'dec_type',
             'dec_level', 'tlp', 'pap', 'ioc', 'tlp', 'cvss'));
     }

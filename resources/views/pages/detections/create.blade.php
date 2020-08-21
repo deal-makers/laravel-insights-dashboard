@@ -215,7 +215,7 @@
                         <div class="hidden-flag col-md-4">
                             <div class="form-group {{ $errors->has('cvss') ? 'has-error' : '' }}">
                                 <label for="cvss">{{ trans('cruds.detections.fields.cvss') }}</label>
-                                {!! Form::select('type', $cvss, old('cvss'), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
+                                {!! Form::select('cvss', $cvss, old('cvss'), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
                                 @if($errors->has('cvss'))
                                     <div class="mt-1 require_error">
                                         {{ $errors->first('cvss') }}
@@ -270,16 +270,21 @@
             border: none;
         }
         .ajax-file-upload-filename {
-            width: 275px;
+            width: 100%;
             font-size: 12px;
         }
         .ajax-file-upload-statusbar
         {
-            width: 285px !important;
+            width: 100% !important;
+            border: 1px solid #dddddd !important;
         }
         .ajax-file-upload-container
         {
             margin: 0px 0px 0px 0px;
+        }
+        .ajax-file-upload-progress
+        {
+            width: 98% !important;
         }
         .ajax-file-upload-container
         {
