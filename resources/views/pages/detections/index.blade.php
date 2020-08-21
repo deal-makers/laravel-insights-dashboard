@@ -55,6 +55,7 @@
                                     {{ \App\User::Find($row->user_id)->name ?? '' }}
                                 </td>
                                 <td>
+                                    @if(Auth::user()->id == $row->user_id)
                                     <a class="btn btn-xs btn-info" href="{{ route('detections.edit', $row->id) }}">
                                         <i class='fe-edit'></i>
                                         {{ trans('global.edit') }}
@@ -68,6 +69,7 @@
                                             @lang('global.delete')
                                         </button>
                                     </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

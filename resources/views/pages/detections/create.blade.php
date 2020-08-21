@@ -201,7 +201,7 @@
                         </div>
                         <div class="hidden-flag col-md-4">
                             <div class="form-group {{ $errors->has('cves') ? 'has-error' : '' }}">
-                                <label for="cves">{{ trans('cruds.detections.fields.cves') }} <span class="text-danger">*</span></label>
+                                <label for="cves">{{ trans('cruds.detections.fields.cves') }}</label>
                                 <div class="tagify-border" data-index="1">
                                     <textarea class="form-control" rows="8" name="cves" id="cves">{{ old('cves') }}</textarea>
                                 </div>
@@ -214,7 +214,7 @@
                         </div>
                         <div class="hidden-flag col-md-4">
                             <div class="form-group {{ $errors->has('cvss') ? 'has-error' : '' }}">
-                                <label for="cvss">{{ trans('cruds.detections.fields.cvss') }} <span class="text-danger">*</span></label>
+                                <label for="cvss">{{ trans('cruds.detections.fields.cvss') }}</label>
                                 {!! Form::select('type', $cvss, old('cvss'), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
                                 @if($errors->has('cvss'))
                                     <div class="mt-1 require_error">
@@ -308,10 +308,6 @@
             font-weight: normal;
             height: 30px;
             -webkit-box-shadow:none;
-        }
-        .hidden-flag
-        {
-            display: none;
         }
 
     </style>

@@ -115,8 +115,21 @@
             width: 100% !important;
         }
         .select2-selection--single{
-            height: 32px !important;
+            height: 40px !important;
             border-color: #ced4da !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow
+        {
+            top:6px;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered
+        {
+            line-height:37px;
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered
+        {
+            height: 32px;
+            padding: 3px 5px;
         }
     </style>
 @endpush
