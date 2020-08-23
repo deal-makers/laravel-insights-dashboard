@@ -52,7 +52,7 @@
                                     {{ session('dec_type')[$row->type] ?? '' }}
                                 </td>
                                 <td>
-                                    {{ \App\User::Find($row->user_id)->name ?? '' }}
+                                    <span class="badge badge-info">{{ \App\User::Find($row->user_id)->name ?? '' }}</span>
                                 </td>
                                 <td>
                                     @if(Auth::user()->id == $row->user_id)

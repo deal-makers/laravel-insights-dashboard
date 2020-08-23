@@ -286,11 +286,6 @@
         {
             width: 98% !important;
         }
-        .ajax-file-upload-container
-        {
-            /*height: 140px;*/
-            /*overflow-y: auto;*/
-        }
         .trash-btn
         {
             margin-left: -2vw;

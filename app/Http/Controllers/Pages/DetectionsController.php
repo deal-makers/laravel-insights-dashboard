@@ -36,6 +36,8 @@ class DetectionsController extends Controller
         $detections = Detection::all();
 
 
+
+
         return view('pages.detections.index', compact('detections'));
     }
 
@@ -242,7 +244,8 @@ class DetectionsController extends Controller
                     $details = array();
                     $details['name'] = $file;
                     $details['path'] = $filePath;
-                    $details['size'] = $this->getFileSize($filePath);
+                    //$details['size'] = $this->getFileSize($filePath);
+                    $details['size'] = rand(1000,9999999);
                     $ret[] = $details;
                 }
                 return new JsonResponse($ret);
