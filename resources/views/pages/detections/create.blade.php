@@ -201,7 +201,7 @@
                         </div>
                         <div class="hidden-flag col-md-4">
                             <div class="form-group {{ $errors->has('cves') ? 'has-error' : '' }}">
-                                <label for="cves">{{ trans('cruds.detections.fields.cves') }} <span class="text-danger">*</span></label>
+                                <label for="cves">{{ trans('cruds.detections.fields.cves') }}</label>
                                 <div class="tagify-border" data-index="1">
                                     <textarea class="form-control" rows="8" name="cves" id="cves">{{ old('cves') }}</textarea>
                                 </div>
@@ -214,8 +214,8 @@
                         </div>
                         <div class="hidden-flag col-md-4">
                             <div class="form-group {{ $errors->has('cvss') ? 'has-error' : '' }}">
-                                <label for="cvss">{{ trans('cruds.detections.fields.cvss') }} <span class="text-danger">*</span></label>
-                                {!! Form::select('type', $cvss, old('cvss'), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
+                                <label for="cvss">{{ trans('cruds.detections.fields.cvss') }}</label>
+                                {!! Form::select('cvss', $cvss, old('cvss'), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
                                 @if($errors->has('cvss'))
                                     <div class="mt-1 require_error">
                                         {{ $errors->first('cvss') }}
@@ -270,21 +270,21 @@
             border: none;
         }
         .ajax-file-upload-filename {
-            width: 275px;
+            width: 100%;
             font-size: 12px;
         }
         .ajax-file-upload-statusbar
         {
-            width: 285px !important;
+            width: 100% !important;
+            border: 1px solid #dddddd !important;
         }
         .ajax-file-upload-container
         {
             margin: 0px 0px 0px 0px;
         }
-        .ajax-file-upload-container
+        .ajax-file-upload-progress
         {
-            /*height: 140px;*/
-            /*overflow-y: auto;*/
+            width: 98% !important;
         }
         .trash-btn
         {
@@ -308,10 +308,6 @@
             font-weight: normal;
             height: 30px;
             -webkit-box-shadow:none;
-        }
-        .hidden-flag
-        {
-            display: none;
         }
 
     </style>

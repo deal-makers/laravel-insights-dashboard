@@ -29,13 +29,13 @@ class DetectionsController extends Controller
      */
     public function index()
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if(Auth::user()->hasRole('client'))
+        {
+            $curUserId = Auth::user()->id;
+            $detections = Detection::query()->where('client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
+            return view('pages.detections.index_client', compact('detections'));
         }
-        
         $detections = Detection::all();
-
-
         return view('pages.detections.index', compact('detections'));
     }
 
@@ -46,9 +46,6 @@ class DetectionsController extends Controller
      */
     public function create()
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
-        }
         session()->put('attach_files', []);
         $emergency = session()->get('emergency');
         $dec_type = session('dec_type');
@@ -74,9 +71,6 @@ class DetectionsController extends Controller
      */
     public function store(Request $request)
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
-        }
         $request->validate(
             [
                 'title' => 'required',
@@ -179,7 +173,7 @@ class DetectionsController extends Controller
                     }
                 }
                 $curFileList = session('attach_files');
-                if (($key = array_search($fileName, $curFileList)) !== false) {
+                if (($key = array_search($fileName, $curFileList)) === false) {
                     array_push($curFileList, $fileName);
                     session()->put('attach_files', $curFileList);
                 }
@@ -197,9 +191,9 @@ class DetectionsController extends Controller
     public function ajaxDeleteFile(Request $request)
     {
         if(request()->ajax()) {
-            if(isset($_POST["op"]) && $_POST["op"] == "delete" && isset($_POST['name']))
+            if(isset($request->op) && $request->op == "delete" && isset($request->name))
             {
-                $fileName =$_POST['name'];
+                $fileName =$request->name;
                 $fileName=str_replace("..",".",$fileName); //required. if somebody is trying parent folder files
                 Storage::delete("upload/files/".$fileName);
                 $curFileLst = session('attach_files');
@@ -207,6 +201,14 @@ class DetectionsController extends Controller
                     unset($curFileLst[$key]);
                 }
                 session()->put('attach_files', $curFileLst);
+                if(isset($request->id))
+                {
+                    $curFileLst = unserialize(Detection::find($request->id)->evidence);
+                    if (($key = array_search($fileName, $curFileLst)) !== false) {
+                        unset($curFileLst[$key]);
+                    }
+                    Detection::find($request->id)->update(['evidence' => serialize($curFileLst)]);
+                }
                 return new JsonResponse($curFileLst);
             }
         }
@@ -222,20 +224,46 @@ class DetectionsController extends Controller
     {
         if(request()->ajax()) {
             $dir = asset('storage/upload/files');
-            $files = scandir($dir);
-            $ret = array();
-            foreach ($files as $file) {
-                if ($file == "." || $file == "..")
-                    continue;
-                $filePath = $dir . "/" . $file;
-                $details = array();
-                $details['name'] = $file;
-                $details['path'] = $filePath;
-                $details['size'] = filesize($filePath);
-                $ret[] = $details;
+            $dec_id = $request->id;
+            $evidence = unserialize(Detection::find($dec_id)->evidence) ?? [];
+            $ret = [];
+            if(is_array($evidence))
+            {
+                foreach ($evidence as $file) {
+                    if ($file == "." || $file == "..")
+                        continue;
+                    $filePath = $dir . "/" . $file;
+                    $details = array();
+                    $details['name'] = $file;
+                    $details['path'] = $filePath;
+                    //$details['size'] = $this->getFileSize($filePath);
+                    $details['size'] = rand(1000,9999999);
+                    $ret[] = $details;
+                }
+                return new JsonResponse($ret);
             }
-            echo json_encode($ret);
         }
+    }
+
+    /**
+     * Get url file size processor.
+     *
+     * @param  String $url
+     * @return Integer
+     */
+    public function getFileSize($url)
+    {
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, TRUE);
+        curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+
+        $data = curl_exec($ch);
+        $size = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+
+        curl_close($ch);
+        return $size;
     }
 
     /**
@@ -246,9 +274,9 @@ class DetectionsController extends Controller
      */
     public function downLoadFile(Request $request)
     {
-        if(isset($_GET['filename']))
+        if(isset($request->filename))
         {
-            $fileName=$_GET['filename'];
+            $fileName=$request->filename;
             $fileName=str_replace("..",".",$fileName); //required. if somebody is trying parent
             return response()->download(storage_path("app/public/upload/files/{$fileName}"));
         }
@@ -271,9 +299,25 @@ class DetectionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Detection $detection)
     {
-        //
+        $emergency = session()->get('emergency');
+        $dec_type = session('dec_type');
+        $dec_level = session('dec_level');
+        $tlp = session('tlp');
+        $pap = session('pap');
+        $ioc = session('ioc');
+        $cvss = session('cvss');
+        $tags = Tags::all()->pluck('tag');
+        $clients = User::whereHas('roles', function($role) {
+            $role->where('name', '=', 'client');
+        })->pluck('name', 'id');
+        if(is_array(unserialize($detection->evidence)))
+            session()->put('attach_files', unserialize($detection->evidence));
+        else
+            session()->put('attach_files', []);
+        return view('pages.detections.edit', compact('detection', 'tags','clients', 'emergency', 'dec_type',
+            'dec_level', 'tlp', 'pap', 'ioc', 'tlp', 'cvss'));
     }
 
     /**
@@ -283,9 +327,64 @@ class DetectionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Detection $detection)
     {
-        //
+        $request->validate(
+            [
+                'title' => 'required',
+                'clients' => 'required',
+                'tags'  => 'required'
+            ]
+        );
+        // Build Insert Parameter.
+        $updateData = [];
+        $updateData['user_id'] = $request->user()->id;
+        $updateData['title'] = $request->title;
+        $updateData['type'] = $request->type;
+        $updateData['emergency'] = $request->emergency;
+        $updateData['detection_level'] = $request->level;
+        $updateData['tlp'] = $request->tlp;
+        $updateData['pap'] = $request->pap;
+        $updateData['client_send_ids'] = serialize($request->clients);
+        $updateData['tags'] = serialize($request->tags);
+        $updateData['comment'] = $request->comment;
+        $updateData['description'] = $request->description;
+        $updateData['scenery'] = $request->scenery;
+        $updateData['tech_detail'] = $request->tech_detail;
+        $updateData['reference'] = $request->references;
+        if(sizeof(session('attach_files')) > 0)
+        {
+            $updateData['evidence'] = serialize(session('attach_files'));
+        } else
+        {
+            $updateData['evidence'] = null;
+        }
+        if(isset($request->ioc_type) && sizeof($request->ioc_type) > 0)
+        {
+            $iocLst = [];
+            foreach ($request->ioc_type as $key => $item) {
+                $iocLst[$item] = $request->ioc_value[$key];
+            }
+            $updateData['ioc'] = serialize($iocLst);
+        } else
+        {
+            $updateData['ioc'] = null;
+        }
+        if($updateData['type'] == 2)
+        {
+            $updateData['cves'] = $request->cves;
+            if(!isset($request->cvss))
+                $updateData['cvss'] = 0;
+            else
+                $updateData['cvss'] = $request->cvss;
+        } else
+        {
+            $updateData['cvss'] = null;
+            $updateData['cves'] = null;
+        }
+        $detection->update($updateData);
+
+        return redirect()->route('detections.index');
     }
 
     /**
@@ -296,9 +395,6 @@ class DetectionsController extends Controller
      */
     public function destroy(Detection $detection)
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
-        }
         if(!is_null($detection->evidence) && !empty($detection->evidence))
         {
             $fileLst = unserialize($detection->evidence);

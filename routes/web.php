@@ -19,7 +19,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('detections', 'Pages\DetectionsController');
     Route::post('upload_file', 'Pages\DetectionsController@ajaxUploadFile');
     Route::post('delete_file', 'Pages\DetectionsController@ajaxDeleteFile');
-    Route::post('load_file', 'Pages\DetectionsController@ajaxLoadFile');
+    Route::get('load_file', 'Pages\DetectionsController@ajaxLoadFile');
     Route::get('download_file', 'Pages\DetectionsController@downLoadFile');
     Route::resource('tags', 'Pages\TagsController');
     Route::post('tagupdate/{tag}', 'Pages\TagsController@ajaxUpdate');
