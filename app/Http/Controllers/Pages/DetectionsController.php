@@ -29,15 +29,13 @@ class DetectionsController extends Controller
      */
     public function index()
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if(Auth::user()->hasRole('client'))
+        {
+            $curUserId = Auth::user()->id;
+            $detections = Detection::query()->where('client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
+            return view('pages.detections.index_client', compact('detections'));
         }
-        
         $detections = Detection::all();
-
-
-
-
         return view('pages.detections.index', compact('detections'));
     }
 
@@ -48,9 +46,6 @@ class DetectionsController extends Controller
      */
     public function create()
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
-        }
         session()->put('attach_files', []);
         $emergency = session()->get('emergency');
         $dec_type = session('dec_type');
@@ -76,9 +71,6 @@ class DetectionsController extends Controller
      */
     public function store(Request $request)
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
-        }
         $request->validate(
             [
                 'title' => 'required',
@@ -309,10 +301,6 @@ class DetectionsController extends Controller
      */
     public function edit(Detection $detection)
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
-        }
-
         $emergency = session()->get('emergency');
         $dec_type = session('dec_type');
         $dec_level = session('dec_level');
@@ -341,9 +329,6 @@ class DetectionsController extends Controller
      */
     public function update(Request $request, Detection $detection)
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
-        }
         $request->validate(
             [
                 'title' => 'required',
@@ -410,9 +395,6 @@ class DetectionsController extends Controller
      */
     public function destroy(Detection $detection)
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
-        }
         if(!is_null($detection->evidence) && !empty($detection->evidence))
         {
             $fileLst = unserialize($detection->evidence);

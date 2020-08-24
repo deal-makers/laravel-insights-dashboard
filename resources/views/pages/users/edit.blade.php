@@ -59,6 +59,7 @@
                     </div>
                 @endif
             </div>
+            @if(!in_array('administrator', $user->roles()->pluck('name')->toArray()))
             <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
                 {!! Form::label('roles', trans('cruds.user.fields.roles')) !!}
                 <div>
@@ -83,6 +84,7 @@
                     </div>
                 @endif
             </div>
+            @endif
             <div class="form-group">
                 {!! Form::label('avatar', trans('cruds.user.fields.avatar')) !!}
                 <div class="col-md-2">

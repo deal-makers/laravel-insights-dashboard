@@ -1,42 +1,41 @@
 @extends('layouts.app')
 @section('content')
-<!-- start page title -->
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box">
-            <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('dashboard') }}">
-                            {{ trans('global.dashboard') }}
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active">{{ trans('global.detections') }}</li>
-                </ol>
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('dashboard') }}">
+                                {{ trans('global.dashboard') }}
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active">{{ trans('global.detections') }}</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">{{ trans('global.detections') }}</h4>
             </div>
-            <h4 class="page-title">{{ trans('global.detections') }}</h4>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <a class="btn btn-success mb-3" href="{{ route('detections.create') }}">
-                    <i class="fe-plus"></i> {{ trans('global.add') }} {{ trans('cruds.detections.title') }}
-                </a>
-                <table id="datatable" class="table dt-responsive nowrap">
-                    <thead>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <table id="datatable" class="table dt-responsive nowrap">
+                        <thead>
                         <tr>
                             <th>{{ trans('cruds.detections.fields.dec_id') }}</th>
                             <th>{{ trans('cruds.detections.fields.title') }}</th>
+                            <th>{{ trans('cruds.detections.fields.description') }}</th>
+                            <th>{{ trans('cruds.detections.fields.detection_level') }}</th>
                             <th>{{ trans('cruds.detections.fields.datetime') }}</th>
                             <th>{{ trans('cruds.detections.fields.category') }}</th>
-                            <th>{{ trans('cruds.detections.fields.analyst') }}</th>
-                            <th>#</th>
+                            <th>{{ trans('cruds.detections.fields.mark_read') }}</th>
+                            <th>{{ trans('cruds.detections.fields.send_feedback') }}</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         @foreach($detections as $key => $row)
                             <tr data-entry-id="{{ $row->id }}">
                                 <td>
@@ -46,39 +45,35 @@
                                     {{ $row->title ?? '' }}
                                 </td>
                                 <td>
+                                    @if (strlen($row->description) > 25)
+                                        {{ substr($row->description, 0, 25) . '...' }}
+                                    @else
+                                        {{ $row->description ?? '' }}
+                                    @endif
+                                </td>
+                                <td>
+                                    {{ session('dec_level')[$row->detection_level] }}
+                                </td>
+                                <td>
                                     {{ $row->created_at }}
                                 </td>
                                 <td>
                                     {{ session('dec_type')[$row->type] ?? '' }}
                                 </td>
                                 <td>
-                                    {{ \App\User::Find($row->user_id)->name ?? '' }}
+                                    <input type="checkbox" data-plugin="switchery" data-size="small"/>
                                 </td>
                                 <td>
-                                    @if(Auth::user()->id == $row->user_id)
-                                    <a class="btn btn-xs btn-info" href="{{ route('detections.edit', $row->id) }}">
-                                        <i class='fe-edit'></i>
-                                        {{ trans('global.edit') }}
-                                    </a>
-
-                                    <form action="{{ route('detections.destroy', $row->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="btn btn-xs btn-danger">
-                                            <i class='fe-trash'></i>
-                                            @lang('global.delete')
-                                        </button>
-                                    </form>
-                                    @endif
+                                    <button type="button" class="btn btn-blue btn-sm waves-effect waves-light ml-2"><i class="fe-send"></i> {{ trans('global.send') }}</button>
                                 </td>
                             </tr>
                         @endforeach
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 @push('css')
     <!-- third party css -->
@@ -90,7 +85,17 @@
     <link href="{{ asset('assets/libs/datatables/dataTables.checkboxes.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/libs/jquery-toast/jquery.toast.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/libs/switchery/switchery.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- third party css end -->
+    <style>
+        .switchery-small
+        {
+            margin-left: 20px;
+        }
+
+
+    </style>
 @endpush
 
 @push('js')
@@ -110,12 +115,19 @@
     <script src="{{ asset('assets/libs/pdfmake/vfs_fonts.js') }}"></script>
     <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('assets/libs/jquery-toast/jquery.toast.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/switchery/switchery.min.js') }}"></script>
+
+
     <!-- third party js ends -->
     <!-- Datatables init -->
-    <script>    
+    <script>
         $(document).ready(function(){
             $("#datatable").DataTable({
                 scrollY: '60vh',
+                responsive: {
+                    details: true
+                },
                 scrollCollapse: true,
                 language: {
                     paginate: {
@@ -130,28 +142,12 @@
                 },
                 "order": [[ 0, "asc" ]]
             });
+            var elems = document.querySelectorAll('[data-plugin="switchery"]');
+
+            for (var i = 0; i < elems.length; i++) {
+                var switchery = new Switchery(elems[i], {size:'small'});
+            }
+
         });
-
-        function isConfirm(form)
-        {
-            event.preventDefault();
-            swal({
-                title: "{{ trans('global.areYouSure') }}",
-                text: "{{ trans('global.canNotRevert') }}",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger m-l-10',
-                confirmButtonText: "{{ trans('global.yesDelete') }}"
-            }).then((result) => {
-                if (result.value) {
-                    $(form).submit();
-                } else
-                {
-                    return false;
-                }
-            });
-        }
-
     </script>
 @endpush
