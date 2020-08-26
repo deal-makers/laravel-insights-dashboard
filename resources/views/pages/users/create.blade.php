@@ -72,14 +72,36 @@
                             </div>
                         @endif
                     </div>
-                    <div class="form-group">
-                        {!! Form::label('status', trans('cruds.user.fields.status')) !!}
-                        <div>
-                            {!! Form::select('status', $status, old('status'), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            {!! Form::label('status', trans('cruds.user.fields.status')) !!}
+                            <div>
+                                {!! Form::select('status', $status, old('status'), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
+                            </div>
+                            @if($errors->has('status'))
+                                <div class="mt-1" style="color: #e6334d; font-weight: 500;">
+                                    {{ $errors->first('status') }}
+                                </div>
+                            @endif
                         </div>
-                        @if($errors->has('status'))
+                        <div class="form-group col-md-6">
+                            <label for="name">{{ trans('cruds.user.fields.cpf_cnpj') }}</label>
+                            <input type="number" id="cpf" name="cpf" class="form-control" value="{{ old('cpf', 0) }}">
+                            @if($errors->has('cpf'))
+                                <div class="mt-1" style="color: #e6334d; font-weight: 500;">
+                                    {{ $errors->first('cpf') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('roles', trans('cruds.user.fields.contract')) !!}
+                        <div>
+                            <textarea class="form-control" id="contract" name="contract" rows="8">{{ old('contract', isset($user) ? $user->contract : '') }}</textarea>
+                        </div>
+                        @if($errors->has('contract'))
                             <div class="mt-1" style="color: #e6334d; font-weight: 500;">
-                                {{ $errors->first('status') }}
+                                {{ $errors->first('contract') }}
                             </div>
                         @endif
                     </div>

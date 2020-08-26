@@ -4,11 +4,13 @@ namespace App\Http\Controllers\pages;
 
 use App\Http\Controllers\Controller;
 use App\Models\Detection;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
 use App\User;
 
 use App\Models\Tags;
@@ -32,7 +34,26 @@ class DetectionsController extends Controller
         if(Auth::user()->hasRole('client'))
         {
             $curUserId = Auth::user()->id;
-            $detections = Detection::query()->where('client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
+            //$detections = Detection::query()->where('client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
+            //$detections = $decModel->where('client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
+            $decList =  Detection::where('detections.client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
+//                leftJoin('dec_attachments', 'detections.id', '=', 'dec_attachments.parent_id')->select('detections.id', 'detections.dec_id', 'detections.title', 'detections.description',
+//                'detections.detection_level', 'detections.created_at', 'detections.type', 'dec_attachments.mark_read', 'dec_attachments.feedback')->get();
+            $detections = [];
+            foreach ($decList as $row)
+            {
+                $res = $row->dec_attachment()->where('client_id', $curUserId)->get();
+                if(sizeof($res) == 1)
+                {
+                    $row->mark_read = $res[0]->mark_read;
+                    $row->feedback = $res[0]->feedback;
+                } else
+                {
+                    $row->mark_read = 0;
+                    $row->feedback = null;
+                }
+                $detections[] = $row;
+            }
             return view('pages.detections.index_client', compact('detections'));
         }
         $detections = Detection::all();
@@ -54,7 +75,25 @@ class DetectionsController extends Controller
         $pap = session('pap');
         $ioc = session('ioc');
         $cvss = session('cvss');
-        $tags = Tags::all()->pluck('tag');
+        $tag_group = ['Global', 'NIST', 'MITER Att & Ck'];
+
+        $tags = [];
+
+        $tag_list = Tags::query()->orderBy('group')->groupBy('group')->select( 'group', \DB::raw("GROUP_CONCAT(id, '::', tag) as tags"))->get();
+
+        foreach ($tag_list as $row)
+        {
+            $childs = explode(",", $row->tags);
+            $tagMap = [];
+            foreach ($childs as $child)
+            {
+                $id = explode("::", $child)[0];
+                $tag = explode("::", $child)[1];
+                $tagMap[$id] = $tag;
+            }
+            $tags[$tag_group[$row->group]] = $tagMap;
+        }
+
         $clients = User::whereHas('roles', function($role) {
             $role->where('name', '=', 'client');
         })->pluck('name', 'id');
@@ -267,6 +306,57 @@ class DetectionsController extends Controller
     }
 
     /**
+     * Ajax mark read.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Detection $detection
+     * @return \Illuminate\Http\Response
+     */
+    public function ajaxMarkRead(Request $request, Detection $detection)
+    {
+        if(request()->ajax()) {
+            if(isset($request->mark_read))
+            {
+                $markRead = $request->mark_read;
+                $client_id = $request->user()->id;
+                $dec_id = $detection->id;
+                $markRead == 'false' ? $markRead = 0 : $markRead = 1;
+                $detection->dec_attachment()->updateOrInsert(['client_id' => $client_id], ['parent_id' => $dec_id, 'mark_read' => $markRead])->touch();
+                return new JsonResponse([], 200);
+            }
+        }
+    }
+
+    /**
+     * Ajax send feedback.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Detection $detection
+     * @return \Illuminate\Http\Response
+     */
+    public function ajaxSendFeedback(Request $request, Detection $detection)
+    {
+        if(request()->ajax()) {
+            if(isset($request->feedback))
+            {
+                $validator = Validator::make($request->all(), [
+                    'feedback' => 'required|min:10|max:500',
+                ]);
+
+                if ($validator->fails()) {
+                    $error_messages = $validator->errors()->messages();
+                    return new JsonResponse($error_messages, 400);
+                }
+                $feedback = $request->feedback;
+                $client_id = $request->user()->id;
+                $dec_id = $detection->id;
+                $detection->dec_attachment()->updateOrInsert(['client_id' => $client_id], ['parent_id' => $dec_id, 'feedback' => $feedback])->touch();
+                return new JsonResponse([], 200);
+            }
+        }
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -308,7 +398,25 @@ class DetectionsController extends Controller
         $pap = session('pap');
         $ioc = session('ioc');
         $cvss = session('cvss');
-        $tags = Tags::all()->pluck('tag');
+        $tag_group = ['Global', 'NIST', 'MITER Att & Ck'];
+
+        $tags = [];
+
+        $tag_list = Tags::query()->orderBy('group')->groupBy('group')->select( 'group', \DB::raw("GROUP_CONCAT(id, '::', tag) as tags"))->get();
+
+        foreach ($tag_list as $row)
+        {
+            $childs = explode(",", $row->tags);
+            $tagMap = [];
+            foreach ($childs as $child)
+            {
+                $id = explode("::", $child)[0];
+                $tag = explode("::", $child)[1];
+                $tagMap[$id] = $tag;
+            }
+            $tags[$tag_group[$row->group]] = $tagMap;
+        }
+
         $clients = User::whereHas('roles', function($role) {
             $role->where('name', '=', 'client');
         })->pluck('name', 'id');
@@ -316,7 +424,7 @@ class DetectionsController extends Controller
             session()->put('attach_files', unserialize($detection->evidence));
         else
             session()->put('attach_files', []);
-        return view('pages.detections.edit', compact('detection', 'tags','clients', 'emergency', 'dec_type',
+        return view('pages.detections.edit', compact('detection', 'tags', 'clients', 'emergency', 'dec_type',
             'dec_level', 'tlp', 'pap', 'ioc', 'tlp', 'cvss'));
     }
 

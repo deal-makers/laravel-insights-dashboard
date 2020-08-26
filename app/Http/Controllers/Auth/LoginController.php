@@ -50,7 +50,11 @@ class LoginController extends Controller
      */
     public function login(\Illuminate\Http\Request $request)
     {
-        $this->validateLogin($request);
+        $request->validate([
+            $this->username() => 'required|string',
+            'password' => 'required|string',
+            'g-recaptcha-response' => 'required|captcha',
+        ]);
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
@@ -109,7 +113,7 @@ class LoginController extends Controller
         //Initialize value store.
         $emergency = ['Yes', 'No'];
         $detectionType = ['Information leakage', 'Infrastructure Exposure', 'Critical Vulnerabilities', 'DeepWeb / Darkweb monitoring', 'Identity monitoring', 'Cyber threats', 'Attacks on suppliers', 'Negative brand exposure', 'Analysis of malicious artifacts'];
-        $detectionLevel = ['Committed Resilience', 'Critical', 'High', 'Medium', 'Information'];
+        $detectionLevel = ['1- Committed Resilience', '2- Critical', '3- High', '4- Medium', '5- Information'];
         $tlp = ['TLP:RED', 'TLP:AMBER', 'TLP:GREEN', 'TLP:WHITE'];
         $pap = ['PAP:RED', 'PAP:AMBER', 'PAP:GREEN', 'PAP:WHITE'];
         $ioc = ['IP address (V4)', 'URI', 'URL', 'Email address', 'Email Subject', 'Host name', 'Domain name', 'MD5 Hash', 'SHA1 hash', 'SHA256 hash', 'SHA384 hash', 'SHA512 hash', 'Address', 'Asynchronous transfer mode address',

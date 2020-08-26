@@ -83,6 +83,8 @@ return [
             'phone'                    => 'Phone',
             'notes'                    => 'Notes',
             'avatar'                   => 'Photo',
+            'cpf_cnpj'                 => 'CPF / CNPJ',
+            'contract'                 => 'Contract',
             'email_helper'             => '',
             'email_verified_at'        => 'Email verified at',
             'email_verified_at_helper' => '',
