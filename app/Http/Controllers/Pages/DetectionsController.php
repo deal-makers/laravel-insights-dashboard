@@ -375,18 +375,52 @@ class DetectionsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Detection  $detection
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Detection $detection)
     {
-        //
+        $emergency = session()->get('emergency');
+        $dec_type = session('dec_type');
+        $dec_level = session('dec_level');
+        $tlp = session('tlp');
+        $pap = session('pap');
+        $ioc = session('ioc');
+        $cvss = session('cvss');
+        $tag_group = ['Global', 'NIST', 'MITER Att & Ck'];
+
+        $tags = [];
+
+        $tag_list = Tags::query()->orderBy('group')->groupBy('group')->select( 'group', \DB::raw("GROUP_CONCAT(id, '::', tag) as tags"))->get();
+
+        foreach ($tag_list as $row)
+        {
+            $childs = explode(",", $row->tags);
+            $tagMap = [];
+            foreach ($childs as $child)
+            {
+                $id = explode("::", $child)[0];
+                $tag = explode("::", $child)[1];
+                $tagMap[$id] = $tag;
+            }
+            $tags[$tag_group[$row->group]] = $tagMap;
+        }
+
+        $clients = User::whereHas('roles', function($role) {
+            $role->where('name', '=', 'client');
+        })->pluck('name', 'id');
+        if(is_array(unserialize($detection->evidence)))
+            session()->put('attach_files', unserialize($detection->evidence));
+        else
+            session()->put('attach_files', []);
+        return view('pages.detections.show', compact('detection', 'tags', 'clients', 'emergency', 'dec_type',
+            'dec_level', 'tlp', 'pap', 'ioc', 'tlp', 'cvss'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Detection  $detection
      * @return \Illuminate\Http\Response
      */
     public function edit(Detection $detection)
@@ -437,11 +471,12 @@ class DetectionsController extends Controller
      */
     public function update(Request $request, Detection $detection)
     {
+
         $request->validate(
             [
                 'title' => 'required',
-                'clients' => 'required',
-                'tags'  => 'required'
+                'clients' => 'required|array',
+                'tags'  => 'required|array'
             ]
         );
         // Build Insert Parameter.

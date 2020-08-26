@@ -39,7 +39,7 @@
                     @foreach($detections as $key => $row)
                         <tr id="{{ $row->id }}">
                             <td>
-                                <a href="{{ url('detection') }}/{{ $row->dec_id }}">{{ $row->dec_id ?? '' }}</a>
+                                <a href="{{ route('detections.show', $row->id) }}">{{ $row->dec_id ?? '' }}</a>
                             </td>
                             <td>
                                 {{ $row->title ?? '' }}
@@ -178,7 +178,6 @@
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                     $('.dataTables_scrollBody').css('min-height', '460px');
-                    $('div.dataTables_scrollBody table tbody tr:last td').attr('style', 'border-bottom:solid 1px #8080805c;')
                 },
                 "order": [[ 0, "asc" ]]
             });

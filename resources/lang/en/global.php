@@ -7,6 +7,8 @@ return [
     'add'                                  => 'Add',
     'business'                             => 'Business',
     'detections'                           => 'Detections',
+    'detection'                            => 'Detection',
+    'send_email'                           => 'Send E-Mail',
     'group'                                => 'Group',
     'close'                                => 'Close',
     'by group'                             => 'By Group',
@@ -92,6 +94,7 @@ return [
     'msg'                                  =>
     [
         'feedback'                         => 'The feedback sent successfuly.',
+        'contact_send'                     => 'The contact sent successfuly.',
         'operation_success'                => 'The operation was success.',
         'operation_faild'                  => 'The operation was failed.',
         'input_faild'                      => 'Input '
@@ -140,6 +143,7 @@ return [
     'confirm_password'                     => 'Confirm password',
     'contact_management'                   => 'Contact management',
     'contacts'                             => 'Contacts',
+    'contact'                              => 'Contact',
     'content_management'                   => 'Content management',
     'copy_paste_url_bellow'                => 'button, copy and paste the URL below into your web browser:',
     'country'                              => 'Country',

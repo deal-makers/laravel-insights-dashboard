@@ -84,6 +84,7 @@ return [
             'notes'                    => 'Notes',
             'avatar'                   => 'Photo',
             'cpf_cnpj'                 => 'CPF / CNPJ',
+            'takedowns'                => 'Takedowns',
             'contract'                 => 'Contract',
             'email_helper'             => '',
             'email_verified_at'        => 'Email verified at',
@@ -110,6 +111,7 @@ return [
             'id'                    => 'ID',
             'dec_id'                => 'Detection ID',
             'title'                 => 'Title',
+            'created_date'          => 'Created Date',
             'datetime'              => 'Date and Hour',
             'category'              => 'Category',
             'analyst'               => 'Analyst',
@@ -140,5 +142,12 @@ return [
 
         ],
     ],
+    'contacts'        => [
 
+        'fields' => [
+            'reason' => 'Contact Reason',
+            'contents' => 'Contents',
+
+        ],
+    ],
 ];

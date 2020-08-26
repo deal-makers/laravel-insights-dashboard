@@ -11,10 +11,10 @@
                                 {{ trans('global.detections') }}
                             </a>
                         </li>
-                        <li class="breadcrumb-item active">{{ trans('global.edit') }}</li>
+                        <li class="breadcrumb-item active">{{ trans('global.show') }}</li>
                     </ol>
                 </div>
-                <h4 class="page-title">{{ trans('global.edit') }} {{ trans('global.detection') }}</h4>
+                <h4 class="page-title">{{ trans('global.show') }} {{ trans('global.detection') }}</h4>
             </div>
         </div>
     </div>
@@ -27,26 +27,26 @@
                         @csrf
                         @method('PUT')
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
                                     <label for="title">{{ trans('cruds.detections.fields.title') }} <span class="text-danger">*</span></label>
-                                    <input type="text" id="title" name="title" class="form-control" value="{{ old('title', isset($detection) ? $detection->title : '') }}" required>
-                                    @if($errors->has('title'))
-                                        <div class="mt-1 require_error">
-                                            {{ $errors->first('title') }}
-                                        </div>
-                                    @endif
+                                    <p id="title" class="form-control">
+                                        {{ old('title', isset($detection) ? $detection->title : '') }}
+                                    </p>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="created_date">{{ trans('cruds.detections.fields.created_date') }} <span class="text-danger">*</span></label>
+                                    <p class="form-control" id="created_date">
+                                        {{ isset($detection) ? $detection->created_at : '' }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                                     <label for="type">{{ trans('cruds.detections.fields.detection_type') }} <span class="text-danger">*</span></label>
-                                    {!! Form::select('type', $dec_type, old('type', isset($detection) ? $detection->type : ''), ['id'=>'type', 'class' => 'form-control', 'data-toggle'=>'select2']) !!}
-                                    @if($errors->has('type'))
-                                        <div class="mt-1 require_error">
-                                            {{ $errors->first('type') }}
-                                        </div>
-                                    @endif
+                                    {!! Form::select('type', $dec_type, old('type', isset($detection) ? $detection->type : ''), ['id'=>'type', 'class' => 'form-control', 'data-toggle'=>'select2', 'disabled'=>true]) !!}
                                 </div>
                             </div>
                         </div>
@@ -54,34 +54,19 @@
                             <div class="col-md-4">
                                 <div class="form-group {{ $errors->has('emergency') ? 'has-error' : '' }}">
                                     <label for="emergency">{{ trans('cruds.detections.fields.emergency') }} <span class="text-danger">*</span></label>
-                                    {!! Form::select('emergency', $emergency, old('emergency', isset($detection) ? $detection->emergency : ''), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
-                                    @if($errors->has('emergency'))
-                                        <div class="mt-1 require_error">
-                                            {{ $errors->first('emergency') }}
-                                        </div>
-                                    @endif
+                                    {!! Form::select('emergency', $emergency, old('emergency', isset($detection) ? $detection->emergency : ''), ['class' => 'form-control', 'data-toggle'=>'select2', 'disabled'=>true]) !!}
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group {{ $errors->has('level') ? 'has-error' : '' }}">
                                     <label for="level">{{ trans('cruds.detections.fields.detection_level') }} <span class="text-danger">*</span></label>
-                                    {!! Form::select('level', $dec_level, old('level', isset($detection) ? $detection->detection_level : ''), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
-                                    @if($errors->has('level'))
-                                        <div class="mt-1 require_error">
-                                            {{ $errors->first('level') }}
-                                        </div>
-                                    @endif
+                                    {!! Form::select('level', $dec_level, old('level', isset($detection) ? $detection->detection_level : ''), ['class' => 'form-control', 'data-toggle'=>'select2', 'disabled'=>true]) !!}
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group {{ $errors->has('tlp') ? 'has-error' : '' }}">
                                     <label for="tlp">{{ trans('cruds.detections.fields.tlp') }} <span class="text-danger">*</span></label>
-                                    {!! Form::select('tlp', $tlp, old('tlp', isset($detection) ? $detection->tlp : ''), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
-                                    @if($errors->has('level'))
-                                        <div class="mt-1 require_error">
-                                            {{ $errors->first('tlp') }}
-                                        </div>
-                                    @endif
+                                    {!! Form::select('tlp', $tlp, old('tlp', isset($detection) ? $detection->tlp : ''), ['class' => 'form-control', 'data-toggle'=>'select2', 'disabled'=>true]) !!}
                                 </div>
                             </div>
                         </div>
@@ -89,34 +74,13 @@
                             <div class="col-md-4">
                                 <div class="form-group {{ $errors->has('pap') ? 'has-error' : '' }}">
                                     <label for="pap">{{ trans('cruds.detections.fields.pap') }} <span class="text-danger">*</span></label>
-                                    {!! Form::select('pap', $pap, old('pap', isset($detection) ? $detection->pap : ''), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
-                                    @if($errors->has('pap'))
-                                        <div class="mt-1 require_error">
-                                            {{ $errors->first('pap') }}
-                                        </div>
-                                    @endif
+                                    {!! Form::select('pap', $pap, old('pap', isset($detection) ? $detection->pap : ''), ['class' => 'form-control', 'data-toggle'=>'select2', 'disabled'=>true]) !!}
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group {{ $errors->has('clients') ? 'has-error' : '' }}">
-                                    <label for="clients">{{ trans('cruds.detections.fields.clients_detections') }} <span class="text-danger">*</span></label>
-                                    {!! Form::select('clients[]', $clients, old('clients', isset($detection) ?  array_map('intval', unserialize($detection->client_send_ids)) : []), ['class' => 'form-control', 'data-toggle'=>'select2', 'multiple'=>'multiple', 'required' => 'required']) !!}
-                                    @if($errors->has('clients'))
-                                        <div class="mt-1 require_error">
-                                            {{ $errors->first('clients') }}
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-md-4">
+                            <div class="col-md-8">
                                 <div class="form-group {{ $errors->has('tags') ? 'has-error' : '' }}">
                                     <label for="tags">{{ trans('cruds.detections.fields.tags_detection') }} <span class="text-danger">*</span></label>
                                     {!! Form::select('tags[]', $tags, old('tags', isset($detection) ?  array_map('intval', unserialize($detection->tags)) : []), ['class' => 'form-control', 'data-toggle'=>'select2', 'multiple'=>'multiple', 'required' => 'required']) !!}
-                                    @if($errors->has('tags'))
-                                        <div class="mt-1 require_error">
-                                            {{ $errors->first('tags') }}
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -125,11 +89,6 @@
                                 <div class="form-group {{ $errors->has('comment') ? 'has-error' : '' }}">
                                     <label for="comment">{{ trans('cruds.detections.fields.analyst_comments') }}</label>
                                     <textarea class="form-control" rows="8" name="comment">{{ old('comment', isset($detection) ? $detection->comment : '') }}</textarea>
-                                    @if($errors->has('comment'))
-                                        <div class="mt-1 require_error">
-                                            {{ $errors->first('comment') }}
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -147,22 +106,12 @@
                                 <div class="form-group {{ $errors->has('scenery') ? 'has-error' : '' }}">
                                     <label for="scenery">{{ trans('cruds.detections.fields.threat_scenery') }}</label>
                                     <textarea class="form-control" rows="8" name="scenery">{{ old('scenery', isset($detection) ? $detection->scenery : '') }}</textarea>
-                                    @if($errors->has('scenery'))
-                                        <div class="mt-1 require_error">
-                                            {{ $errors->first('scenery') }}
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group {{ $errors->has('tech_detail') ? 'has-error' : '' }}">
                                     <label for="tech_detail">{{ trans('cruds.detections.fields.tech_details') }}</label>
                                     <textarea class="form-control" rows="8" name="tech_detail">{{ old('tech_detail', isset($detection) ? $detection->tech_detail : '') }}</textarea>
-                                    @if($errors->has('tech_detail'))
-                                        <div class="mt-1 require_error">
-                                            {{ $errors->first('tech_detail') }}
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -170,21 +119,15 @@
                             <div class="col-md-8">
                                 <div class="form-group {{ $errors->has('ioc') ? 'has-error' : '' }}">
                                     <label for="ioc">{{ trans('cruds.detections.fields.ioc') }}</label>
-                                    <div>
-                                        <button class="btn btn-success mb-1" type="button" id="ioc_add_btn"><i class="fe-plus"></i> {{ trans('global.add') }} </button>
-                                    </div>
                                     <div class="ioc-content">
                                         @if(isset($detection))
                                             @foreach(unserialize($detection->ioc) as $key => $value)
                                                 <div class="row mb-1">
                                                     <div class="col-md-4">
-                                                        {!! Form::select('ioc_type[]', $ioc, old('ioc_type', $key), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
+                                                        <p class="form-control">{{ session('ioc')[$key] }}</p>
                                                     </div>
-                                                    <div class="col-md-7">
+                                                    <div class="col-md-8">
                                                         <input type="text" name="ioc_value[]" class="form-control" value="{{ old('ioc_value', $value) }}" required>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <button class="btn btn-danger trash-btn" type="button" onclick="removeCurItem(this)"><i class="fe-trash"></i></button>
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -207,11 +150,6 @@
                                     <div class="tagify-border" data-index="0">
                                         <textarea class="form-control" rows="8" name="references" id="references">{{ old('references', isset($detection) ? $detection->reference : '') }}</textarea>
                                     </div>
-                                    @if($errors->has('references'))
-                                        <div class="mt-1 require_error">
-                                            {{ $errors->first('references') }}
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
                             <div class="hidden-flag col-md-4">
@@ -230,16 +168,10 @@
                             <div class="hidden-flag col-md-4">
                                 <div class="form-group {{ $errors->has('cvss') ? 'has-error' : '' }}">
                                     <label for="cvss">{{ trans('cruds.detections.fields.cvss') }}</label>
-                                    {!! Form::select('cvss', $cvss, old('cvss', isset($detection) ? $detection->cvss : ''), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
-                                    @if($errors->has('cvss'))
-                                        <div class="mt-1 require_error">
-                                            {{ $errors->first('cvss') }}
-                                        </div>
-                                    @endif
+                                    {!! Form::select('cvss', $cvss, old('cvss', isset($detection) ? $detection->cvss : ''), ['class' => 'form-control', 'data-toggle'=>'select2', 'disabled'=>true]) !!}
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-danger" type="submit"><i class="mdi mdi-send mr-1"></i> {{ trans('global.save') }}</button>
                     </form>
                 </div>
             </div>
@@ -323,6 +255,10 @@
             height: 30px;
             -webkit-box-shadow:none;
         }
+        #evdences
+        {
+            display: none;
+        }
         @media only screen and (max-width: 767px) {
             .trash-btn
             {
@@ -361,7 +297,6 @@
                 dragDrop: true,
                 fileName: "myfile",
                 returnType: "json",
-                showDelete: true,
                 showDownload:true,
                 statusBarWidth:500,
                 dragdropWidth:500,

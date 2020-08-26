@@ -14,7 +14,7 @@
                     <li class="breadcrumb-item active">{{ trans('global.create') }}</li>
                 </ol>
             </div>
-            <h4 class="page-title">{{ trans('global.create') }} {{ trans('global.detections') }}</h4>
+            <h4 class="page-title">{{ trans('global.create') }} {{ trans('global.detection') }}</h4>
         </div>
     </div>
 </div>
@@ -99,7 +99,7 @@
                         <div class="col-md-4">
                             <div class="form-group {{ $errors->has('clients') ? 'has-error' : '' }}">
                                 <label for="clients">{{ trans('cruds.detections.fields.clients_detections') }} <span class="text-danger">*</span></label>
-                                {!! Form::select('clients[]', $clients, old('clients'), ['class' => 'form-control', 'data-toggle'=>'select2', 'multiple'=>'multiple']) !!}
+                                {!! Form::select('clients[]', $clients, old('clients'), ['class' => 'form-control', 'data-toggle'=>'select2', 'multiple'=>'multiple', 'required' => 'required']) !!}
                                 @if($errors->has('clients'))
                                     <div class="mt-1 require_error">
                                         {{ $errors->first('clients') }}
@@ -110,7 +110,7 @@
                         <div class="col-md-4">
                             <div class="form-group {{ $errors->has('tags') ? 'has-error' : '' }}">
                                 <label for="tags">{{ trans('cruds.detections.fields.tags_detection') }} <span class="text-danger">*</span></label>
-                                {!! Form::select('tags[]', $tags, old('tags'), ['class' => 'form-control', 'data-toggle'=>'select2', 'multiple'=>'multiple']) !!}
+                                {!! Form::select('tags[]', $tags, old('tags'), ['class' => 'form-control', 'data-toggle'=>'select2', 'multiple'=>'multiple', 'required' => 'required']) !!}
                                 @if($errors->has('tags'))
                                     <div class="mt-1 require_error">
                                         {{ $errors->first('tags') }}
@@ -308,6 +308,13 @@
             font-weight: normal;
             height: 30px;
             -webkit-box-shadow:none;
+        }
+        @media only screen and (max-width: 767px) {
+            .trash-btn
+            {
+                width: 100%;
+                margin-left: 0px;
+            }
         }
 
     </style>

@@ -120,6 +120,7 @@ class LoginController extends Controller
                 'Autonomous System Number (ASN)', 'CIDR rule', 'CVE number', 'Archive', 'File path', 'IMPHASH', 'IP address (V6)', 'IPV4 Netmask', 'IPV4 Network', 'IPV6 Netmask', 'IPV6 Network',
                 'MAC address', 'MUTEX name', 'Observable Composition', 'Organization Name', 'PEHASH', 'Phone number', 'Registration key', 'Serial Number', 'Top-level domain name', 'Unknown', 'Windows Executable File'];
         $cvss = ['0.0 (None)', '0.1 - 3.9 (Low)', '4.0 - 6.9 (Medium)', '7.0 - 8.9 (High)', '9.0 - 10.0 (Critical)'];
+        $contactReason = ['Feedback', 'Report', 'Detection', 'Takedown', 'Financial', 'Commercial', 'Other'];
 
         //Session store.
         session()->put('emergency', $emergency);
@@ -129,6 +130,6 @@ class LoginController extends Controller
         session()->put('pap', $pap);
         session()->put('ioc', $ioc);
         session()->put('cvss', $cvss);
-
+        session()->put('contact_reason', $contactReason);
     }
 }

@@ -21,4 +21,10 @@ class Detection extends Model
         return $this->hasMany('App\Models\Dec_Attachment', 'parent_id');
     }
 
+    public  function contacts()
+    {
+        return $this->hasMany('App\Models\Contact', 'detection_id');
+    }
+
+
 }

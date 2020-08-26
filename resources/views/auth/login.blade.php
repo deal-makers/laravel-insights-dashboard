@@ -7,7 +7,7 @@
         <div class="account-pages mt-6 mb-5">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div>
+                    <div class="col-md-5 col-lg-5">
                         <!-- Start card block -->
                         <div class="card bg-pattern">
                             <div class="card-body p-4">

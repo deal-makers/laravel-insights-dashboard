@@ -152,7 +152,6 @@
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                     $('.dataTables_scrollBody').css('min-height', '460px');
-                    $('div.dataTables_scrollBody table tbody tr:last td').attr('style', 'border-bottom:solid 1px #8080805c;')
                 },
                 "order": [[ 0, "desc" ]]
             });
