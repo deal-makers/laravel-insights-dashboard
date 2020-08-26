@@ -16,4 +16,9 @@ class Detection extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function dec_attachment()
+    {
+        return $this->hasMany('App\Models\Dec_Attachment', 'parent_id');
+    }
+
 }

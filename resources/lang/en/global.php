@@ -61,8 +61,7 @@ return [
     'search_input_too_short'               => 'Please enter :count or more characters',
     'show'                                 => 'Show',
     'systemCalendar'                       => 'Calendar',
-    '
-    '                               => 'System',
+    'contents'                             => 'Contents',
     'thankYouForUsingOurApplication'       => 'Thank you for using our website',
     'timeFrom'                             => 'From',
     'timeTo'                               => 'To',
@@ -89,6 +88,13 @@ return [
     ],
     'error'                           => [
         'operate_error'          => 'Current Processing is failed.',
+    ],
+    'msg'                                  =>
+    [
+        'feedback'                         => 'The feedback sent successfuly.',
+        'operation_success'                => 'The operation was success.',
+        'operation_faild'                  => 'The operation was failed.',
+        'input_faild'                      => 'Input '
     ],
     'action'                               => 'Action',
     'action_id'                            => 'Action id',
@@ -233,6 +239,7 @@ return [
     'select_dt_placeholder'                => 'Please select one of date/time fields',
     'select_users_placeholder'             => 'Please select one of your Users',
     'send'                                 => 'Send',
+    'sent'                                 => 'Sent',
     'serial_number'                        => 'Serial number',
     'simple_user'                          => 'Simple user',
     'skype'                                => 'Skype',

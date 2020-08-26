@@ -6,6 +6,7 @@
     "type": "project",
     "require": {
         "php": "^7.2",
+        "anhskohbo/no-captcha": "^3.2",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "~6.0",

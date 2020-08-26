@@ -12,5 +12,4 @@ class Tags extends Model
     {
         $this->belongsTo('App\User' );
     }
-
 }

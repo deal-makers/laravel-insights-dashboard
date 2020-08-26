@@ -46,6 +46,7 @@
                                 {{ trans('cruds.user.fields.status') }}
                             </th>
                             <th>
+                                #
                             </th>
                         </tr>
                     </thead>
