@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use App\User;
+use Mail;
 
 class ContactsController extends Controller
 {
@@ -23,6 +24,7 @@ class ContactsController extends Controller
     {
         if(Auth::user()->hasRole('administrator') || Auth::user()->hasRole('analyst'))
         {
+
 
         } else
         {
@@ -71,7 +73,17 @@ class ContactsController extends Controller
 
         if($sendType == "2") //In addition to send Email.
         {
-
+            $from_email = $request->user()->email;
+            $from_name = $request->user()->name;
+            $to_email = Detection::find($detection_id)->user->email;
+            $to_name = Detection::find($detection_id)->user->name;
+            $contact_reason = session('contact_reason')[$reason];
+            $data = array('title'=>'Send US A MESSAGE', 'name'=>"CYBINT ($to_name)", 'body' => $contents);
+//            Mail::send('mails.contacts', $data, function($message) use ($to_name, $to_email, $from_email, $from_name) {
+//                $message->to($to_email, $to_name)
+//                    ->subject('Send US A MESSAGE');
+//                $message->from($from_email, $from_name);
+//            });
         }
         $contact_reason = session('contact_reason');
         $detections = Detection::all()->pluck('dec_id', 'id');

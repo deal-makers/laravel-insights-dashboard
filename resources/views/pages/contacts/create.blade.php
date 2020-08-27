@@ -56,7 +56,7 @@
                                                 {!! Form::select('dec_id', $detections, old('dec_id'), ['id'=>'dec_id', 'class' => 'form-control', 'data-toggle' => 'select2', 'require' => true]) !!}
                                             </div>
                                             <div class="col-md-1">
-                                                <button class="btn btn-success show-btn" type="button" onclick="showDetection()"> <i class="fe-eye"></i></button>
+                                                <button class="btn btn-info show-btn" type="button" onclick="showDetection()"> <i class="fe-eye"></i></button>
                                             </div>
                                         </div>
 
