@@ -11,10 +11,10 @@
                             {{ trans('global.dashboard') }}
                         </a>
                     </li>
-                    <li class="breadcrumb-item active">{{ trans('global.detections') }}</li>
+                    <li class="breadcrumb-item active">{{ trans('global.contacts') }}</li>
                 </ol>
             </div>
-            <h4 class="page-title">{{ trans('global.detections') }}</h4>
+            <h4 class="page-title">{{ trans('global.contacts') }}</h4>
         </div>
     </div>
 </div>
@@ -22,46 +22,54 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <a class="btn btn-success mb-3" href="{{ route('detections.create') }}">
-                    <i class="fe-plus"></i> {{ trans('global.add') }} {{ trans('cruds.detections.title') }}
-                </a>
                 <table id="datatable" class="table dt-responsive nowrap">
                     <thead>
                         <tr>
+                            <th>{{ trans('cruds.detections.fields.id') }}</th>
                             <th>{{ trans('cruds.detections.fields.dec_id') }}</th>
-                            <th>{{ trans('cruds.detections.fields.title') }}</th>
+                            <th>{{ trans('cruds.contacts.fields.reason') }}</th>
+                            <th>{{ trans('cruds.contacts.fields.sender_name') }}</th>
+                            <th>{{ trans('cruds.contacts.fields.receive_name') }}</th>
                             <th>{{ trans('cruds.detections.fields.datetime') }}</th>
-                            <th>{{ trans('cruds.detections.fields.category') }}</th>
-                            <th>{{ trans('cruds.detections.fields.analyst') }}</th>
+                            <th>{{ trans('global.content') }}</th>
                             <th>#</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($detections as $key => $row)
+                        @foreach($contacts as $key => $row)
                             <tr data-entry-id="{{ $row->id }}">
                                 <td>
+                                    {{ $row->id ?? '' }}
+                                </td>
+                                <td id="dec_id_{{ $row->id }}">
                                     {{ $row->dec_id ?? '' }}
                                 </td>
-                                <td>
-                                    {{ $row->title ?? '' }}
+                                <td id="td_reason_{{ $row->id }}">
+                                    {{ session('contact_reason')[$row->contact_reason] ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $row->created_at }}
-                                </td>
-                                <td>
-                                    {{ session('dec_type')[$row->type] ?? '' }}
+                                    {{ \App\User::Find($row->client_id)->name ?? '' }}
                                 </td>
                                 <td>
                                     {{ \App\User::Find($row->user_id)->name ?? '' }}
                                 </td>
+                                <td id="td_datetime_{{ $row->id }}">
+                                    {{ $row->created_at }}
+                                </td>
+                                <td id="td_contents_{{ $row->id }}" title="{{ $row->contents }}">
+                                    @if (strlen($row->contents) > 25)
+                                        {{ substr($row->contents, 0, 25) . '...' }}
+                                    @else
+                                        {{ $row->contents ?? '' }}
+                                    @endif
+                                </td>
                                 <td>
-                                    @if(Auth::user()->id == $row->user_id)
-                                    <a class="btn btn-xs btn-info" href="{{ route('detections.edit', $row->id) }}">
-                                        <i class='fe-edit'></i>
-                                        {{ trans('global.edit') }}
+                                    <a class="btn btn-xs btn-info" href="javascript:showDetail({{ $row->id }});" >
+                                        <i class='fe-eye'></i>
+                                        {{ trans('global.view') }}
                                     </a>
 
-                                    <form action="{{ route('detections.destroy', $row->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
+                                    <form action="{{ route('contacts.destroy', $row->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-xs btn-danger">
@@ -69,7 +77,6 @@
                                             @lang('global.delete')
                                         </button>
                                     </form>
-                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -79,6 +86,39 @@
         </div>
     </div>
 </div>
+
+<!-- Create & Edit Modal for Data -->
+<div id="data-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="data-modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{ trans('global.contact') }}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="tag_group" class="control-label" id="modal_contact_reason">{{ trans('cruds.contacts.fields.reason') }} </label>
+                            <p id="contact_reason" class="form-control"></p>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="tag_group" class="control-label">{{ trans('cruds.contacts.fields.contents') }} </label>
+                            <textarea id="contents" class="form-control" rows="7" disabled></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">@lang('global.close')</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal -->
+
 @endsection
 @push('css')
     <!-- third party css -->
@@ -151,6 +191,11 @@
                 }
             });
         }
-
+        let showDetail = (id) => {
+            $('#modal_contact_reason').html(`{{ trans('cruds.contacts.fields.reason') }}, ` + $(`#td_datetime_${id}`).text());
+            $('#contact_reason').html($(`#td_reason_${id}`).text());
+            $('#contents').html($(`#td_contents_${id}`).attr('title'));
+            $('#data-modal').modal({backdrop:'static',keyboard:false, show:true});
+        }
     </script>
 @endpush

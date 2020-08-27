@@ -72,7 +72,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group {{ $errors->has('contents') ? 'has-error' : '' }}">
                                         <label for="contents">{{ trans('cruds.contacts.fields.contents') }} <span class="text-danger">*</span></label>
-                                        <textarea class="form-control" rows="15" name="contents" id="contents" required autofocus maxlength="1000">{{ old('contents') }}</textarea>
+                                        <textarea class="form-control" rows="15" name="contents" id="contents" required autofocus maxlength="1000" placeholder="{{ trans('validation.limited', ['attribute' => 1000]) }}">{{ old('contents') }}</textarea>
                                         @if($errors->has('contents'))
                                             <div class="mt-1 require_error">
                                                 {{ $errors->first('contents') }}

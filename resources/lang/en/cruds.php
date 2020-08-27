@@ -115,10 +115,12 @@ return [
             'datetime'              => 'Date and Hour',
             'category'              => 'Category',
             'analyst'               => 'Analyst',
+            'creater'               => 'Creater',
             'description'           => 'Description',
             'detection_level'       => 'Detection Level',
             'mark_read'             => 'Mark Read',
             'send_feedback'         => 'Send Feedback',
+            'feedback'              => 'Feedback',
             'detection_type'        => 'Detection Type',
             'emergency'             => 'Emergency',
             'tlp'                   => 'TLP',
@@ -147,7 +149,8 @@ return [
         'fields' => [
             'reason' => 'Contact Reason',
             'contents' => 'Contents',
-
+            'sender_name' => 'Sender Name',
+            'receive_name' => 'Receiver Name',
         ],
     ],
 ];

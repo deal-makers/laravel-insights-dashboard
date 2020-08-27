@@ -174,7 +174,7 @@
                                         <button class="btn btn-success mb-1" type="button" id="ioc_add_btn"><i class="fe-plus"></i> {{ trans('global.add') }} </button>
                                     </div>
                                     <div class="ioc-content">
-                                        @if(isset($detection))
+                                        @if(isset($detection) && !is_null($detection->ioc))
                                             @foreach(unserialize($detection->ioc) as $key => $value)
                                                 <div class="row mb-1">
                                                     <div class="col-md-4">

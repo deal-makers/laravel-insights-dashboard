@@ -1,46 +1,49 @@
 @extends('layouts.app')
 @section('content')
-<!-- start page title -->
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box">
-            <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('dashboard') }}">
-                            {{ trans('global.dashboard') }}
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active">{{ trans('global.detections') }}</li>
-                </ol>
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('dashboard') }}">
+                                {{ trans('global.dashboard') }}
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active">{{ trans('global.reports') }}</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">{{ trans('global.reports') }}</h4>
             </div>
-            <h4 class="page-title">{{ trans('global.detections') }}</h4>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <a class="btn btn-success mb-3" href="{{ route('detections.create') }}">
-                    <i class="fe-plus"></i> {{ trans('global.add') }} {{ trans('cruds.detections.title') }}
-                </a>
-                <table id="datatable" class="table dt-responsive nowrap">
-                    <thead>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <a class="btn btn-info mb-3" href="{{ route('reports.create') }}">
+                        <i class="mdi mdi-database-export"></i> {{ trans('global.export') }}
+                    </a>
+                    <table id="datatable" class="table dt-responsive nowrap">
+                        <thead>
                         <tr>
+                            <th>{{ trans('cruds.detections.fields.id') }}</th>
                             <th>{{ trans('cruds.detections.fields.dec_id') }}</th>
                             <th>{{ trans('cruds.detections.fields.title') }}</th>
                             <th>{{ trans('cruds.detections.fields.datetime') }}</th>
                             <th>{{ trans('cruds.detections.fields.category') }}</th>
-                            <th>{{ trans('cruds.detections.fields.analyst') }}</th>
-                            <th>#</th>
+                            <th>{{ trans('cruds.detections.fields.creater') }}</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         @foreach($detections as $key => $row)
                             <tr data-entry-id="{{ $row->id }}">
                                 <td>
-                                    {{ $row->dec_id ?? '' }}
+                                    {{ $row->id ?? '' }}
+                                </td>
+                                <td>
+                                    <a href="{{ route('detections.show', $row->id) }}">{{ $row->dec_id ?? '' }}</a>
                                 </td>
                                 <td>
                                     {{ $row->title ?? '' }}
@@ -54,31 +57,14 @@
                                 <td>
                                     {{ \App\User::Find($row->user_id)->name ?? '' }}
                                 </td>
-                                <td>
-                                    @if(Auth::user()->id == $row->user_id || Auth::user()->hasRole('administrator'))
-                                    <a class="btn btn-xs btn-info" href="{{ route('detections.edit', $row->id) }}">
-                                        <i class='fe-edit'></i>
-                                        {{ trans('global.edit') }}
-                                    </a>
-
-                                    <form action="{{ route('detections.destroy', $row->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="btn btn-xs btn-danger">
-                                            <i class='fe-trash'></i>
-                                            @lang('global.delete')
-                                        </button>
-                                    </form>
-                                    @endif
-                                </td>
                             </tr>
                         @endforeach
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 @push('css')
     <!-- third party css -->
@@ -112,7 +98,7 @@
     <script src="{{ asset('assets/libs/jquery-toast/jquery.toast.min.js') }}"></script>
     <!-- third party js ends -->
     <!-- Datatables init -->
-    <script>    
+    <script>
         $(document).ready(function(){
             $("#datatable").DataTable({
                 scrollY: '60vh',
@@ -130,27 +116,6 @@
                 "order": [[ 0, "asc" ]]
             });
         });
-
-        function isConfirm(form)
-        {
-            event.preventDefault();
-            swal({
-                title: "{{ trans('global.areYouSure') }}",
-                text: "{{ trans('global.canNotRevert') }}",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger m-l-10',
-                confirmButtonText: "{{ trans('global.yesDelete') }}"
-            }).then((result) => {
-                if (result.value) {
-                    $(form).submit();
-                } else
-                {
-                    return false;
-                }
-            });
-        }
 
     </script>
 @endpush

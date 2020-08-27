@@ -22,13 +22,24 @@ class ContactsController extends Controller
      */
     public function index()
     {
-        if(Auth::user()->hasRole('administrator') || Auth::user()->hasRole('analyst'))
+        if(Auth::user()->hasRole('administrator'))
         {
-
-
-        } else
+            $contacts = Contact::query()->leftJoin('detections', 'contacts.detection_id', '=', 'detections.id')
+                ->select('contacts.id', 'contacts.client_id', 'contacts.detection_id', 'contacts.contact_reason',
+                    'contacts.contents', 'contacts.created_at', 'detections.dec_id', 'detections.user_id')
+                ->get();
+            return view('pages.contacts.index', compact('contacts'));
+        } else if(Auth::user()->hasRole('analyst'))
         {
-
+            $contacts = Contact::query()->leftJoin('detections', 'contacts.detection_id', '=', 'detections.id')
+                ->select('contacts.id', 'contacts.client_id', 'contacts.detection_id', 'contacts.contact_reason',
+                    'contacts.contents', 'contacts.created_at', 'detections.dec_id', 'detections.user_id')
+                ->where('detections.user_id', '=',  Auth::user()->id)
+                ->get();
+            return view('pages.contacts.index', compact('contacts'));
+        }
+        else
+        {
             $contact_reason = session('contact_reason');
             $curUserId = Auth::user()->id;
             $detections =  Detection::where('detections.client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get()->pluck('dec_id', 'id');
@@ -66,6 +77,7 @@ class ContactsController extends Controller
         $client_id = $request->user()->id;
         $detection_id = $request->dec_id;
         $reason = $request->reason;
+
         $contents = $request->contents;
         Contact::query()->updateOrInsert(['client_id' => $client_id, 'detection_id' => $detection_id, 'contact_reason' => $reason], ['client_id' => $client_id, 'detection_id' => $detection_id,
             'contact_reason' => $reason, 'contents' => $contents, 'created_at' => date('Y-m-d H:i:s'),
@@ -77,17 +89,16 @@ class ContactsController extends Controller
             $from_name = $request->user()->name;
             $to_email = Detection::find($detection_id)->user->email;
             $to_name = Detection::find($detection_id)->user->name;
+            $mail_Dec_id = Detection::find($detection_id)->dec_id;
             $contact_reason = session('contact_reason')[$reason];
-            $data = array('title'=>'Send US A MESSAGE', 'name'=>"CYBINT ($to_name)", 'body' => $contents);
-//            Mail::send('mails.contacts', $data, function($message) use ($to_name, $to_email, $from_email, $from_name) {
-//                $message->to($to_email, $to_name)
-//                    ->subject('Send US A MESSAGE');
-//                $message->from($from_email, $from_name);
-//            });
+            $data = array('title'=>trans('global.mail.contact_us_mail'), 'name'=>"$to_name! [ Contact Reason: $contact_reason, Detection ID: $mail_Dec_id ]", 'body' => $contents);
+            Mail::send('mails.contacts', $data, function($message) use ($to_name, $to_email, $from_email, $from_name) {
+                $to_email = 'root@localhost.com'; ///Test email....
+                $message->to($to_email, $to_name)
+                    ->subject(trans('global.mail.contact_us_mail'));
+                $message->from($from_email, $from_name);
+            });
         }
-        $contact_reason = session('contact_reason');
-        $detections = Detection::all()->pluck('dec_id', 'id');
-        $success = trans('global.msg.contact_send');
         return redirect('contacts')->with('success', trans('global.msg.contact_send'));
     }
 
@@ -128,11 +139,12 @@ class ContactsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Contact  $contact
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Contact $contact)
     {
-        //
+        $detection->delete();
+        return redirect()->route('contacts.destroy');
     }
 }

@@ -22,6 +22,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('mark_read/{detection}', 'Pages\DetectionsController@ajaxMarkRead');
     Route::post('send_feedback/{detection}', 'Pages\DetectionsController@ajaxSendFeedback');
     Route::resource('contacts', 'Pages\ContactsController');
+    Route::resource('feedbacks', 'Pages\FeedbacksController');
+    Route::resource('reports', 'Pages\ReportsController');
 
     Route::get('load_file', 'Pages\DetectionsController@ajaxLoadFile');
     Route::get('download_file', 'Pages\DetectionsController@downLoadFile');
