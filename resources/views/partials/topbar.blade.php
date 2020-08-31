@@ -126,10 +126,10 @@
 <div class="logo-box">
     <a href="/" class="logo text-center">
         <span class="logo-lg">
-            <img src="{{ asset('assets/images/logo-light.png') }}" alt="" height="25">
+            <img src="{{ asset('assets/images/Imagem1.png') }}" alt="" height="40">
         </span>
         <span class="logo-sm">
-            <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="45">
+            <img src="{{ asset('assets/images/logo-sm-1.png') }}" alt="" height="45">
         </span>
     </a>
 </div>

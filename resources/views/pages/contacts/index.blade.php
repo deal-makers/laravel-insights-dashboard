@@ -106,7 +106,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="tag_group" class="control-label">{{ trans('cruds.contacts.fields.contents') }} </label>
-                            <textarea id="contents" class="form-control" rows="7" disabled></textarea>
+                            <textarea id="contents" class="form-control" rows="7"></textarea>
                         </div>
                     </div>
                 </div>

@@ -8,8 +8,8 @@ use App\User;
 class Detection extends Model
 {
     protected $fillable = [
-        'user_id', 'dec_id','title', 'type', 'emergency', 'detection_level', 'tlp', 'pap', 'client_send_ids', 'tags', 'comment', 'description', 'scenery', 'tech_detail',
-        'reference', 'evidence', 'ioc', 'cves', 'cvss'];
+        'id', 'user_id', 'dec_id','title', 'type', 'emergency', 'detection_level', 'tlp', 'pap', 'client_send_ids', 'tags', 'comment', 'description', 'scenery', 'tech_detail',
+        'reference', 'evidence', 'ioc', 'cves', 'cvss', 'created_at', 'updated_at'];
 
     public function user()
     {

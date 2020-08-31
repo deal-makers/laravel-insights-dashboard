@@ -193,7 +193,7 @@
                 $.post("{{ url('mark_read') }}" + "/" + rowId, {mark_read: status},
                     function (resp,textStatus, jqXHR) {
                         $.NotificationApp.send(
-                            "Success",
+                            "{{ trans('global.success') }}",
                             "{{ trans('global.msg.operation_success') }}",
                             "top-right",
                             "#09dab0",
@@ -227,7 +227,7 @@
                 $('#send_feedback_' + rowId).attr('data-status', 1);
 
                 $.NotificationApp.send(
-                    "Success",
+                    "{{ trans('global.success') }}",
                     "{{ trans('global.msg.feedback') }}",
                     "top-right",
                     "#09dab0",

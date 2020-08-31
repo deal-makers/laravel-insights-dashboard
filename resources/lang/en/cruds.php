@@ -109,6 +109,7 @@ return [
 
         'fields' => [
             'id'                    => 'ID',
+            'all_component'         => 'All Component',
             'dec_id'                => 'Detection ID',
             'title'                 => 'Title',
             'created_date'          => 'Created Date',
