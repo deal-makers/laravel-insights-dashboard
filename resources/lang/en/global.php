@@ -147,6 +147,8 @@ return [
     'campaigns'                            => 'Campaigns',
     'categories'                           => 'Categories',
     'category'                             => 'Category',
+    'take_down'                            => 'Take Down',
+    'count'                                => 'Count',
     'category_name'                        => 'Category name',
     'change_notifications_field_1_label'   => 'Send email notification to User',
     'change_notifications_field_2_label'   => 'When Entry on CRUD',

@@ -9,7 +9,8 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-use App\Models\Template;
+use App\Models\Detection;
+use App\User;
 
 class DashboardController extends Controller
 {
@@ -30,7 +31,13 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $users = \App\User::all();
-        return view('pages.dashboard', compact('users'));
+        $detection_cnt = Detection::query()->select('type', DB::raw('count(*) as count'))->groupBy('type')->orderBy('count', 'desc')->get();
+        $takedown_cnt = User::whereHas(
+                'roles', function($q){
+                    $q->where('name', 'client');
+                })->sum('takedowns');
+
+        $detection_count_level = Detection::query()->select('detection_level', DB::raw('count(*) as count'))->groupBy('detection_level')->orderBy('count', 'desc')->get();
+        return view('pages.dashboard', compact('detection_cnt', 'takedown_cnt', 'detection_count_level'));
     }
 }
