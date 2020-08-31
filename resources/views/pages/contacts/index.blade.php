@@ -42,7 +42,7 @@
                                     {{ $row->id ?? '' }}
                                 </td>
                                 <td id="dec_id_{{ $row->id }}">
-                                    {{ $row->dec_id ?? '' }}
+                                    <a href="{{ route('detections.edit', $row->dec_real_id) }}">{{ $row->dec_id ?? '' }}</a>
                                 </td>
                                 <td id="td_reason_{{ $row->id }}">
                                     {{ session('contact_reason')[$row->contact_reason] ?? '' }}
