@@ -39,7 +39,7 @@
                     @foreach($detections as $key => $row)
                         <tr id="{{ $row->id }}">
                             <td>
-                                <a href="{{ url('detection') }}/{{ $row->dec_id }}">{{ $row->dec_id ?? '' }}</a>
+                                <a href="{{ route('detections.show', $row->id) }}">{{ $row->dec_id ?? '' }}</a>
                             </td>
                             <td>
                                 {{ $row->title ?? '' }}
@@ -178,7 +178,6 @@
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                     $('.dataTables_scrollBody').css('min-height', '460px');
-                    $('div.dataTables_scrollBody table tbody tr:last td').attr('style', 'border-bottom:solid 1px #8080805c;')
                 },
                 "order": [[ 0, "asc" ]]
             });
@@ -194,7 +193,7 @@
                 $.post("{{ url('mark_read') }}" + "/" + rowId, {mark_read: status},
                     function (resp,textStatus, jqXHR) {
                         $.NotificationApp.send(
-                            "Success",
+                            "{{ trans('global.success') }}",
                             "{{ trans('global.msg.operation_success') }}",
                             "top-right",
                             "#09dab0",
@@ -228,7 +227,7 @@
                 $('#send_feedback_' + rowId).attr('data-status', 1);
 
                 $.NotificationApp.send(
-                    "Success",
+                    "{{ trans('global.success') }}",
                     "{{ trans('global.msg.feedback') }}",
                     "top-right",
                     "#09dab0",

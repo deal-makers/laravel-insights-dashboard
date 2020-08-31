@@ -11,10 +11,10 @@
                             {{ trans('global.dashboard') }}
                         </a>
                     </li>
-                    <li class="breadcrumb-item active">@lang('global.tags')</li>
+                    <li class="breadcrumb-item active">{{ trans('global.contacts') }}</li>
                 </ol>
             </div>
-            <h4 class="page-title">@lang('global.tags')</h4>
+            <h4 class="page-title">{{ trans('global.contacts') }}</h4>
         </div>
     </div>
 </div>
@@ -22,42 +22,54 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <a class="btn btn-success mb-3" href="javascript:openCreateModal();">
-                    <i class="fe-plus"></i> {{ trans('global.add') }} {{ trans('global.tag') }}
-                </a>
                 <table id="datatable" class="table dt-responsive nowrap">
                     <thead>
                         <tr>
-                            <th>{{ trans('cruds.permission.fields.id') }}</th>
-                            <th>{{ trans('global.group') }}</th>
-                            <th>{{ trans('global.tag') }}</th>
+                            <th>{{ trans('cruds.detections.fields.id') }}</th>
+                            <th>{{ trans('cruds.detections.fields.dec_id') }}</th>
+                            <th>{{ trans('cruds.contacts.fields.reason') }}</th>
+                            <th>{{ trans('cruds.contacts.fields.sender_name') }}</th>
+                            <th>{{ trans('cruds.contacts.fields.receive_name') }}</th>
+                            <th>{{ trans('cruds.detections.fields.datetime') }}</th>
+                            <th>{{ trans('global.content') }}</th>
                             <th>#</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($tags as $key => $row)
+                        @foreach($contacts as $key => $row)
                             <tr data-entry-id="{{ $row->id }}">
                                 <td>
                                     {{ $row->id ?? '' }}
                                 </td>
+                                <td id="dec_id_{{ $row->id }}">
+                                    {{ $row->dec_id ?? '' }}
+                                </td>
+                                <td id="td_reason_{{ $row->id }}">
+                                    {{ session('contact_reason')[$row->contact_reason] ?? '' }}
+                                </td>
                                 <td>
-                                    @if($row->group == 0)
-                                    Global
-                                    @elseif($row->group == 1)
-                                    NIST
+                                    {{ \App\User::Find($row->client_id)->name ?? '' }}
+                                </td>
+                                <td>
+                                    {{ \App\User::Find($row->user_id)->name ?? '' }}
+                                </td>
+                                <td id="td_datetime_{{ $row->id }}">
+                                    {{ $row->created_at }}
+                                </td>
+                                <td id="td_contents_{{ $row->id }}" title="{{ $row->contents }}">
+                                    @if (strlen($row->contents) > 25)
+                                        {{ substr($row->contents, 0, 25) . '...' }}
                                     @else
-                                    MITER Att & Ck
+                                        {{ $row->contents ?? '' }}
                                     @endif
                                 </td>
                                 <td>
-                                    {{ $row->tag ?? '' }}
-                                </td>
-                                <td>
-                                    <a class="btn btn-xs btn-info" href="javascript:openEditModal('{{ $row->group ?? 0}}', '{{ $row->tag ?? '' }}', '{{ $row->id ?? '' }}');">
-                                        <i class='fe-edit'></i>
-                                        {{ trans('global.edit') }}
+                                    <a class="btn btn-xs btn-info" href="javascript:showDetail({{ $row->id }});" >
+                                        <i class='fe-eye'></i>
+                                        {{ trans('global.view') }}
                                     </a>
-                                    <form action="{{ route('tags.destroy', $row->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
+
+                                    <form action="{{ route('contacts.destroy', $row->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-xs btn-danger">
@@ -74,37 +86,39 @@
         </div>
     </div>
 </div>
+
 <!-- Create & Edit Modal for Data -->
 <div id="data-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="data-modal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"></h4>
+                <h4 class="modal-title">{{ trans('global.contact') }}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-            <div class="modal-body p-4">
+            <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="tag_group" class="control-label">@lang('global.group') <span class="text-danger">*</span></label>
-                            {!! Form::select('tag_group', ["Global", "NIST", "MITER Att & Ck"], 0, ['id' => 'tag_group', 'class' => 'form-control']) !!}
-                            <label for="tag" class="control-label mt-1">@lang('global.tag') <span class="text-danger">*</span></label>
-                            <input type="text" required class="form-control" value="" id="tag">
-                            <span class="mt-1 require_error" id="tag_error"></span>
+                            <label for="tag_group" class="control-label" id="modal_contact_reason">{{ trans('cruds.contacts.fields.reason') }} </label>
+                            <p id="contact_reason" class="form-control"></p>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="tag_group" class="control-label">{{ trans('cruds.contacts.fields.contents') }} </label>
+                            <textarea id="contents" class="form-control" rows="7"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <input type="hidden" id="edit_tag" />
-                <input type="hidden" id="tag_val" />
                 <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">@lang('global.close')</button>
-                <button type="button" class="btn btn-info waves-effect waves-light" id="modal-btn-save" action-type="create" onclick="saveData()" >@lang('global.save')</button>
             </div>
         </div>
     </div>
 </div>
 <!-- End Modal -->
+
 @endsection
 @push('css')
     <!-- third party css -->
@@ -155,87 +169,33 @@
                 },
                 "order": [[ 0, "asc" ]]
             });
+        });
 
-            $("input").on('keyup', function (e) {
-                if (e.key === 'Enter' || e.keyCode === 13) {
-                    saveData();
+        function isConfirm(form)
+        {
+            event.preventDefault();
+            swal({
+                title: "{{ trans('global.areYouSure') }}",
+                text: "{{ trans('global.canNotRevert') }}",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger m-l-10',
+                confirmButtonText: "{{ trans('global.yesDelete') }}"
+            }).then((result) => {
+                if (result.value) {
+                    $(form).submit();
+                } else
+                {
+                    return false;
                 }
             });
-        });
-        let openCreateModal = () => {
-            $('.modal-title').text("{{ trans('global.add') }} {{ trans('global.tag') }}");
-            $('#edit_tag').val('');
-            $("#tag_error").text('');
-            $('#modal-btn-save').attr('action-type', 'create');
+        }
+        let showDetail = (id) => {
+            $('#modal_contact_reason').html(`{{ trans('cruds.contacts.fields.reason') }}, ` + $(`#td_datetime_${id}`).text());
+            $('#contact_reason').html($(`#td_reason_${id}`).text());
+            $('#contents').html($(`#td_contents_${id}`).attr('title'));
             $('#data-modal').modal({backdrop:'static',keyboard:false, show:true});
         }
-
-        let openEditModal = (group, tag, id) => {
-            $('.modal-title').text("{{ trans('global.edit') }} {{ trans('global.tag') }}");
-            $('#modal-btn-save').attr('action-type', 'edit');
-            $('#edit_tag').val(id);
-            $('#tag_group').val(group);
-            $("#tag_error").text('');
-            $('#tag').val(tag);
-            $('#tag_val').val(tag);
-            $('#data-modal').modal({backdrop:'static',keyboard:false, show:true});
-        }
-
-        let saveData = () => {
-            let group = $('#tag_group').val();
-            let tag = $('#tag').val();
-            if(tag == '')
-            {
-                $('#tag').focus();
-                @php
-                    $filed = strtolower(trans('global.tag'));
-                @endphp
-                $("#tag_error").text('{{ trans('validation.filled', ['attribute' => $filed]) }}');
-                return false;
-            }
-            let action_type = $('#modal-btn-save').attr('action-type');
-            if(action_type == 'create')
-            {
-                $.ajax({
-                    url: "{{ route('tags.store') }}",
-                    data: {group: group, tag: tag},
-                    type: 'POST',
-                    dataType: 'json', // added data type
-                    success: function(res) {
-                        location.reload();
-                    },
-                    error: function(jqXHR, exception)
-                    {
-                        $.each(jqXHR.responseJSON, function(key, val) {
-                            $("#tag_error").text(val[0]);
-                        });
-                    }
-                });
-            } else
-            {
-                let tag_id = $('#edit_tag').val();
-                let change_flag = 0;
-                if($('#tag_val').val() != tag) change_flag = 1;
-                $.ajax({
-                    url: "{{ url('tagupdate') }}" + `/${tag_id}`,
-                    data: {group: group, tag: tag, change_flag: change_flag},
-                    type: 'POST',
-                    dataType: 'json', // added data type
-                    success: function(res) {
-                        location.reload();
-                    },
-                    error: function(jqXHR, exception)
-                    {
-                        $.each(jqXHR.responseJSON, function(key, val) {
-                            $("#tag_error").text(val[0]);
-                        });
-                    }
-                });
-            }
-        }
-
-        $('#data-modal').on('shown.bs.modal', function () {
-            $('input:text:visible:first', this).focus();
-        }); 
     </script>
 @endpush

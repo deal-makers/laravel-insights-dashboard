@@ -7,13 +7,13 @@
         <div class="account-pages mt-6 mb-5">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div>
+                    <div class="col-md-5 col-lg-5">
                         <!-- Start card block -->
                         <div class="card bg-pattern">
                             <div class="card-body p-4">
-                                <div class="text-center w-75 m-auto">
+                                <div class="text-center m-auto">
                                     <a href="{{ url("/") }}">
-                                        <span><img src="{{ asset('assets/images/logo-dark-old.png') }}" alt="" height="25"></span>
+                                        <span><img src="{{ asset('assets/images/logo-dark-old-1.png') }}" alt="" height="50"></span>
                                     </a>
                                 </div>
                                 @if (count($errors) > 0)
@@ -23,7 +23,7 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <form role="form" method="POST" action="{{ url('login') }}">
+                                <form role="form" method="POST" action="{{ url('login') }}" class="mt-2">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     
                                     <div class="form-group mb-3">
@@ -43,11 +43,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group mb-3">
-                                        <label for="captcha">Captcha</label>
-                                        {!! NoCaptcha::renderJs() !!}
-                                        {!! NoCaptcha::display() !!}
-                                    </div>
+{{--                                    <div class="form-group mb-3">--}}
+{{--                                        <label for="captcha">Captcha</label>--}}
+{{--                                        {!! NoCaptcha::renderJs() !!}--}}
+{{--                                        {!! NoCaptcha::display() !!}--}}
+{{--                                    </div>--}}
 
                                     <div class="form-group mb-0 text-center">
                                         <button class="btn btn-primary btn-block" type="submit"> @lang("global.login") </button>

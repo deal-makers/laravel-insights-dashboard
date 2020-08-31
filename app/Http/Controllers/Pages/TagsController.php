@@ -22,10 +22,6 @@ class TagsController extends Controller
      */
     public function index()
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
-        }
-        
         $tags = Tags::all();
 
         return view('pages.tags.index', compact('tags'));

@@ -55,7 +55,7 @@
                                     {{ \App\User::Find($row->user_id)->name ?? '' }}
                                 </td>
                                 <td>
-                                    @if(Auth::user()->id == $row->user_id)
+                                    @if(Auth::user()->id == $row->user_id || Auth::user()->hasRole('administrator'))
                                     <a class="btn btn-xs btn-info" href="{{ route('detections.edit', $row->id) }}">
                                         <i class='fe-edit'></i>
                                         {{ trans('global.edit') }}
@@ -126,7 +126,6 @@
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                     $('.dataTables_scrollBody').css('min-height', '460px');
-                    $('div.dataTables_scrollBody table tbody tr:last td').attr('style', 'border-bottom:solid 1px #8080805c;')
                 },
                 "order": [[ 0, "asc" ]]
             });

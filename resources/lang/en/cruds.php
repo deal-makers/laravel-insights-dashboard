@@ -84,6 +84,7 @@ return [
             'notes'                    => 'Notes',
             'avatar'                   => 'Photo',
             'cpf_cnpj'                 => 'CPF / CNPJ',
+            'takedowns'                => 'Takedowns',
             'contract'                 => 'Contract',
             'email_helper'             => '',
             'email_verified_at'        => 'Email verified at',
@@ -108,15 +109,19 @@ return [
 
         'fields' => [
             'id'                    => 'ID',
+            'all_component'         => 'All Component',
             'dec_id'                => 'Detection ID',
             'title'                 => 'Title',
+            'created_date'          => 'Created Date',
             'datetime'              => 'Date and Hour',
             'category'              => 'Category',
             'analyst'               => 'Analyst',
+            'creater'               => 'Creater',
             'description'           => 'Description',
             'detection_level'       => 'Detection Level',
             'mark_read'             => 'Mark Read',
             'send_feedback'         => 'Send Feedback',
+            'feedback'              => 'Feedback',
             'detection_type'        => 'Detection Type',
             'emergency'             => 'Emergency',
             'tlp'                   => 'TLP',
@@ -140,5 +145,13 @@ return [
 
         ],
     ],
+    'contacts'        => [
 
+        'fields' => [
+            'reason' => 'Contact Reason',
+            'contents' => 'Contents',
+            'sender_name' => 'Sender Name',
+            'receive_name' => 'Receiver Name',
+        ],
+    ],
 ];

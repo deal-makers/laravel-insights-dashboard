@@ -3,6 +3,13 @@
     <ul class="metismenu" id="side-menu">
         <li class="menu-title">@lang('global.title')</li>
         <li>
+            <a href="/">
+                <i class="fe-airplay"></i>
+                <span> {{ trans('global.dashboard') }} </span>
+            </a>
+        </li>
+        @if(Auth::user()->hasRole('administrator'))
+        <li>
             <a href="#">
                 <i class="fe-users"></i>
                 <span> {{ trans('cruds.userManagement.title') }} </span>
@@ -29,6 +36,7 @@
                 </li>
             </ul>
         </li>
+        @endif
         <li>
             <a href="#">
                 <i class="fe-grid"></i>
@@ -43,9 +51,41 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('contacts.index') }}">
+                        <i class="fe-message-square"></i>
+                        <span> @lang('global.contacts') </span>
+                    </a>
+                </li>
+                @if(Auth::user()->hasRole('administrator') || Auth::user()->hasRole('analyst'))
+
+                <li>
                     <a href="{{ route('tags.index') }}">
                         <i class="fe-tag"></i>
                         <span> @lang('global.tags') </span>
+                    </a>
+                </li>
+                @endif
+            </ul>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fe-server"></i>
+                <span> {{ trans('global.reports') }} </span>
+                <span class="menu-arrow"></span>
+            </a>
+            <ul class="nav-second-level" aria-expanded="false">
+                @if(Auth::user()->hasRole('administrator') || Auth::user()->hasRole('analyst'))
+                <li>
+                    <a href="{{ route('feedbacks.index') }}">
+                        <i class="fe-edit-1"></i>
+                        <span> @lang('global.feedback') </span>
+                    </a>
+                </li>
+                @endif
+                <li>
+                    <a href="{{ route('reports.index') }}">
+                        <i class="fe-layers"></i>
+                        <span> @lang('global.reports') </span>
                     </a>
                 </li>
             </ul>

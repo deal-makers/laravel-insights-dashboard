@@ -73,7 +73,7 @@
                         @endif
                     </div>
                     <div class="row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             {!! Form::label('status', trans('cruds.user.fields.status')) !!}
                             <div>
                                 {!! Form::select('status', $status, old('status'), ['class' => 'form-control', 'data-toggle'=>'select2']) !!}
@@ -84,7 +84,16 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
+                            <label for="name">{{ trans('cruds.user.fields.takedowns') }}</label>
+                            <input type="number" id="takedowns" name="takedowns" class="form-control" value="{{ old('takedowns', 0) }}">
+                            @if($errors->has('takedownsss'))
+                                <div class="mt-1" style="color: #e6334d; font-weight: 500;">
+                                    {{ $errors->first('takedowns') }}
+                                </div>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4">
                             <label for="name">{{ trans('cruds.user.fields.cpf_cnpj') }}</label>
                             <input type="number" id="cpf" name="cpf" class="form-control" value="{{ old('cpf', 0) }}">
                             @if($errors->has('cpf'))

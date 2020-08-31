@@ -3,10 +3,15 @@
     <head>
         @include('partials.head')
         @stack('css')
-
-
     </head>
     <body>
+        <!-- Pre-loader -->
+        <div id="preloader">
+            <div id="status">
+                <div class="spinner">Loading...</div>
+            </div>
+        </div>
+    <!-- End Preloader-->
 
         <!-- Begin page -->
         <div id="wrapper">
