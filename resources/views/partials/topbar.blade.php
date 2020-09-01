@@ -10,9 +10,9 @@
             <div class="dropdown-item noti-title">
                 <h5 class="m-0">
                     <span class="float-right">
-                        <a href="" class="text-dark">
-                            <small>@lang('global.clear_all')</small>
-                        </a>
+{{--                        <a href="" class="text-dark">--}}
+{{--                            <small>@lang('global.clear_all')</small>--}}
+{{--                        </a>--}}
                     </span>@lang('global.notifications')
                 </h5>
             </div>

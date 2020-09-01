@@ -96,7 +96,7 @@ class DashboardController extends Controller
         $curYear = date('Y');
         $curMonth = date('m');
         $decMonthlyCount = [];
-        for($mon = 1; $mon <= (int) $curMonth; $mon++)
+        for($mon = 1; $mon <= $curMonth; $mon++)
         {
             $monthVal = $mon;
             if(strlen($mon) == 1) $monthVal = '0'.$mon;
