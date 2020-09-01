@@ -432,6 +432,17 @@ class DetectionsController extends Controller
      */
     public function edit(Detection $detection)
     {
+        //Notification add seens user
+
+
+
+        if(Auth::user()->hasRole('client'))
+            return redirect(route('detections.show', $detection->id));
+        else if(Auth::user()->hasRole('analyst') && $detection->user_id != Auth::user()->id)
+        {
+            return redirect(route('detections.show', $detection->id));
+        }
+
         $emergency = session()->get('emergency');
         $dec_type = session('dec_type');
         $dec_level = session('dec_level');

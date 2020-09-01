@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use DateTime;
+
 
 class Notification extends Model
 {
@@ -15,7 +17,7 @@ class Notification extends Model
      * @param  String  $datetime
      * @return String
      */
-    public function time_elapsed_string($datetime, $full = false)
+    public static function time_elapsed_string($datetime, $full = false)
     {
         $now = new DateTime;
         $ago = new DateTime($datetime);
