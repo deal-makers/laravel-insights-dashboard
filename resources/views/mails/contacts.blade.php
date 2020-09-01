@@ -18,7 +18,7 @@ bgcolor="#f6f6f6">
 <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
 <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;"
     valign="top"></td>
-<td class="container" width="600"
+<td class="container" width="700"
     style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; display: block !important; max-width: 600px !important; clear: both !important; margin: 0 auto;"
     valign="top">
     <div class="content"
@@ -53,14 +53,16 @@ bgcolor="#f6f6f6">
                             <td class="content-block"
                                 style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
                                 valign="top">
-                                <pre>{{ $body }}</pre>
+                                <div style="max-width: 700px;">
+                                    <pre style="max-width: 700px;overflow-x: auto;">{{ $body }}</pre>
+                                </div>
                             </td>
                         </tr>
                         <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                             <td class="content-block"
                                 style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
                                 valign="top">
-                                {{ trans('global.mail.thanks') }}
+{{--                                {{ trans('global.mail.thanks') }}--}}
                             </td>
                         </tr>
                     </table>

@@ -203,7 +203,7 @@
                     ],
                 });
                 var barColorsArray = ['#ff0000', '#3498DB', '#ffe971','#26B99A', '#DE8244',
-                    '#1fc02f', '#2b14ff','#DE8244'];
+                    '#1fc02f', '#887aff','#DE8244'];
                 var colorIndex = -1;
                 var data = [
                     @foreach($detection_cnt as $row)
