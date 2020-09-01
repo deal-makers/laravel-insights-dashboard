@@ -26,14 +26,14 @@ class ContactsController extends Controller
         {
             $contacts = Contact::query()->leftJoin('detections', 'contacts.detection_id', '=', 'detections.id')
                 ->select('contacts.id', 'contacts.client_id', 'contacts.detection_id', 'contacts.contact_reason',
-                    'contacts.contents', 'contacts.created_at', 'detections.dec_id', 'detections.user_id')
+                    'contacts.contents', 'contacts.created_at', 'detections.dec_id', 'detections.user_id', 'detections.id as dec_real_id')
                 ->get();
             return view('pages.contacts.index', compact('contacts'));
         } else if(Auth::user()->hasRole('analyst'))
         {
             $contacts = Contact::query()->leftJoin('detections', 'contacts.detection_id', '=', 'detections.id')
                 ->select('contacts.id', 'contacts.client_id', 'contacts.detection_id', 'contacts.contact_reason',
-                    'contacts.contents', 'contacts.created_at', 'detections.dec_id', 'detections.user_id')
+                    'contacts.contents', 'contacts.created_at', 'detections.dec_id', 'detections.user_id', 'detections.id as dec_real_id')
                 ->where('detections.user_id', '=',  Auth::user()->id)
                 ->get();
             return view('pages.contacts.index', compact('contacts'));

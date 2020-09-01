@@ -16,5 +16,7 @@ class PermissionSeed extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
         
         Permission::create(['name' => 'users_manage']);
+        Permission::create(['name' => 'tracking_manage']);
+        Permission::create(['name' => 'business_manage']);
     }
 }
