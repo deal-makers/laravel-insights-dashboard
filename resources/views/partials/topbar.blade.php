@@ -1,9 +1,21 @@
 
 <ul class="list-unstyled topnav-menu float-right mb-0">
+    @php
+        $curUserId = Auth::user()->id;
+        if(Auth::user()->hasRole('client'))
+        {
+            $notificationLst = \App\Models\Notification::where('seen_users', 'NOT REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->where('send_clients', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
+        } else {
+            $notificationLst = \App\Models\Notification::where('seen_users', 'NOT REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->where('creater_id', '<>', $curUserId)->get();
+        }
+        $notiCnt = sizeof($notificationLst);
+    @endphp
     <li class="dropdown notification-list">
         <a class="nav-link dropdown-toggle  waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
             <i class="fe-bell noti-icon"></i>
-            <span class="badge badge-danger rounded-circle noti-icon-badge">9</span>
+            @if($notiCnt > 0)
+            <span class="badge badge-danger rounded-circle noti-icon-badge">{{ $notiCnt }}</span>
+            @endif
         </a>
         <div class="dropdown-menu dropdown-menu-right dropdown-lg">
             <!-- item-->
@@ -18,31 +30,13 @@
             </div>
 
             <div class="slimscroll noti-scroll">
-                @php
-                    $curUserId = Auth::user()->id;
-                    if(Auth::user()->hasRole('client'))
-                    {
-                        $notificationLst = \App\Models\Notification::where('seen_users', 'NOT REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
-                    } else {
-                        $notificationLst = \App\Models\Notification::where('seen_users', 'NOT REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->where('created_id');
-                    }
-
-
-
-                @endphp
-
-
-
-                <!-- item-->
-                <a href="javascript:void(0);" class="dropdown-item notify-item active">
-                    <div class="notify-icon">
-                        <img src="{{ asset('assets/images/users/default.png') }}" class="img-fluid rounded-circle" alt="" /> </div>
-                    <p class="notify-details">Cristina Pride</p>
-                    <p class="text-muted mb-0 user-msg">
-                        <small>Hi, How are you? What about our next meeting</small>
+                @if($notiCnt == 0)
+                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                    <p class="notify-details">
+                        @lang('global.msg.no_notification')
                     </p>
                 </a>
-
+                @else
                 <!-- item-->
                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                     <div class="notify-icon bg-primary">
@@ -83,13 +77,18 @@
                         <small class="text-muted">13 days ago</small>
                     </p>
                 </a>
+                @endif
             </div>
 
+
+        @if($notiCnt > 0)
             <!-- All-->
             <a href="#" class="dropdown-item text-center text-primary notify-item notify-all">
                 @lang('global.view_more')
                 <i class="fi-arrow-right"></i>
             </a>
+        @endif
+
 
         </div>
     </li>

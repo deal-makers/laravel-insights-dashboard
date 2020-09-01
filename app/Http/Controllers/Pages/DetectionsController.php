@@ -161,6 +161,7 @@ class DetectionsController extends Controller
         $notifyData['detection_id'] = $res->id;
         $notifyData['detection_type'] = $request->type;
         $notifyData['send_clients'] = serialize($request->clients);
+        $notifyData['seen_users'] = serialize([]);
         Notification::create($notifyData);
         return redirect()->route('detections.index');
     }
