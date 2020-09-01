@@ -4,9 +4,10 @@
         $curUserId = Auth::user()->id;
         if(Auth::user()->hasRole('client'))
         {
-            $notificationLst = \App\Models\Notification::where('seen_users', 'NOT REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->where('send_clients', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
+            $notificationLst = \App\Models\Notification::where('seen_users', 'NOT LIKE', '%%%'.serialize($curUserId).'%%')
+            ->where('send_clients', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->orderBy('id', 'desc')->get();
         } else {
-            $notificationLst = \App\Models\Notification::where('seen_users', 'NOT REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->where('creater_id', '<>', $curUserId)->get();
+            $notificationLst = \App\Models\Notification::where('seen_users', 'NOT LIKE', '%%%'.serialize($curUserId).'%%')->where('creater_id', '<>', $curUserId)->orderBy('id', 'desc')->get();
         }
         $notiCnt = sizeof($notificationLst);
     @endphp

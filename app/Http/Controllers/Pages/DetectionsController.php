@@ -432,9 +432,18 @@ class DetectionsController extends Controller
      */
     public function edit(Detection $detection)
     {
-        //Notification add seens user
-
-
+        //Notification add seens user//
+        $curUser = Auth::user()->id;
+        $curNotification = Notification::where('detection_id', '=', $detection->id)->get();
+        if(sizeof($curNotification) > 0)
+        {
+            $curSeen_Users = unserialize($curNotification[0]->seen_users);
+            if(!$curSeen_Users || !in_array($curUser, $curSeen_Users))
+            {
+                $curSeen_Users[] = $curUser;
+                Notification::where('detection_id', '=', $detection->id)->update(['seen_users' => serialize($curSeen_Users)]);
+            }
+        }
 
         if(Auth::user()->hasRole('client'))
             return redirect(route('detections.show', $detection->id));
