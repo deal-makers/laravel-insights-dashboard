@@ -1,4 +1,4 @@
-/vendor/
+/vendor
 node_modules/
 npm-debug.log
 yarn-error.log
@@ -15,13 +15,9 @@ public/hot
 public_html/storage
 public_html/hot
 
-/storage
 .env
 Homestead.yaml
 Homestead.json
 /.vagrant
 /.idea
 .phpunit.result.cache
-
-/vendor
-resources/assets/sass/app.scss
