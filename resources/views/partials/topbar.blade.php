@@ -18,6 +18,20 @@
             </div>
 
             <div class="slimscroll noti-scroll">
+                @php
+                    $curUserId = Auth::user()->id;
+                    if(Auth::user()->hasRole('client'))
+                    {
+                        $notificationLst = \App\Models\Notification::where('seen_users', 'NOT REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
+                    } else {
+                        $notificationLst = \App\Models\Notification::where('seen_users', 'NOT REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->where('created_id');
+                    }
+
+
+
+                @endphp
+
+
 
                 <!-- item-->
                 <a href="javascript:void(0);" class="dropdown-item notify-item active">

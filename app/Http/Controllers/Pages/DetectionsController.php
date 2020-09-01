@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use App\User;
 
 use App\Models\Tags;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Storage;
 
 class DetectionsController extends Controller
@@ -154,8 +155,13 @@ class DetectionsController extends Controller
             else
                 $insertData['cvss'] = $request->cvss;
         }
-        Detection::create($insertData);
+        $res = Detection::create($insertData);
 
+        $notifyData['creater_id'] = $request->user()->id;
+        $notifyData['detection_id'] = $res->id;
+        $notifyData['detection_type'] = $request->type;
+        $notifyData['send_clients'] = serialize($request->clients);
+        Notification::create($notifyData);
         return redirect()->route('detections.index');
     }
 
