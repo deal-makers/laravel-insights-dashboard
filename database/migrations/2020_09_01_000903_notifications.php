@@ -19,7 +19,7 @@ class Notifications extends Migration
             $table->integer('detection_id');
             $table->integer('detection_type');
             $table->text('send_clients');
-            $table->text('seen_users');
+            $table->text('seen_users')->nullable();
 
             $table->timestamps();
         });

@@ -107,7 +107,8 @@ return [
         'operation_success'                => 'The operation was success.',
         'operation_faild'                  => 'The operation was failed.',
         'set_component'                    => 'You must be check the component setting.',
-        'input_faild'                      => 'Input '
+        'input_faild'                      => 'Input ',
+        'no_notification'                  => 'You have no Notifications.',
     ],
     'mail'                                 =>
     [

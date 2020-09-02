@@ -144,7 +144,7 @@ class ContactsController extends Controller
      */
     public function destroy(Contact $contact)
     {
-        $detection->delete();
-        return redirect()->route('contacts.destroy');
+        $contact->delete();
+        return redirect()->route('contacts.index');
     }
 }

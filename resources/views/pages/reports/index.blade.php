@@ -132,6 +132,13 @@
         .btn-secondary:hover{
             background-color: #4fc6e1 !important;
         }
+        @media only screen and (max-width: 400px) {
+            .ms-selection
+            {
+                margin-right: 35px;
+            }
+        }
+
     </style>
 @endpush
 
