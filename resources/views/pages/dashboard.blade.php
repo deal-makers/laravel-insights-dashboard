@@ -31,7 +31,7 @@
                         <tbody>
                         @for($index = 0; $index < sizeof($detection_cnt) - 1; $index+=2)
                             <tr>
-                                <td>
+                                <td title="{{ session('dec_type')[$detection_cnt[$index]->type] }}">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="avatar-md rounded-circle border-dark border">
@@ -46,7 +46,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td title="{{ session('dec_type')[$detection_cnt[$index + 1]->type] }}">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="avatar-md rounded-circle border-dark border">
