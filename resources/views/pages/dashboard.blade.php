@@ -29,19 +29,19 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($detection_cnt as $row)
+                        @for($index = 0; $index < sizeof($detection_cnt) - 1; $index+=2)
                             <tr>
                                 <td>
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="avatar-md rounded-circle border-dark border">
-                                                <i class="fe-heart font-22 avatar-title text-dark"></i>
+                                                <i class="{{ $notification_icons[$detection_cnt[$index]->type] }} font-22 avatar-title text-dark"></i>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="text-left icon-left">
-                                                <h3 class="text-dark mt-1">58</h3>
-                                                <p class="text-muted mb-1 text-truncate">Total Revenue</p>
+                                                <h3 class="text-dark mt-1">{{ number_format($detection_cnt[$index]->count) }}</h3>
+                                                <p class="text-muted mb-1 text-truncate">{{ session('dec_type')[$detection_cnt[$index]->type] }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -50,19 +50,19 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="avatar-md rounded-circle border-dark border">
-                                                <i class="fe-heart font-22 avatar-title text-dark"></i>
+                                                <i class="{{ $notification_icons[$detection_cnt[$index + 1]->type] }} font-22 avatar-title text-dark"></i>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="text-left icon-left">
-                                                <h3 class="text-dark mt-1">18</h3>
-                                                <p class="text-muted mb-1 text-truncate">Total Revenue</p>
+                                                <h3 class="text-dark mt-1">{{ number_format($detection_cnt[$index + 1]->count) }}</h3>
+                                                <p class="text-muted mb-1 text-truncate">{{ session('dec_type')[$detection_cnt[$index + 1]->type] }}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-                        @endforeach
+                        @endfor
                         </tbody>
                     </table>
                 </div>
@@ -70,11 +70,21 @@
         </div> <!-- end widget-rounded-circle-->
     </div> <!-- end col-->
 
-    <div class="col-md-6 col-xl-3">
+    <div class="col-md-6 col-xl-3" id="morris-donut-dec-div">
         <!-- Portlet card -->
         <div class="card-box">
             <div class="m-auto">
+                <h4 class="header-title mb-2">{{ trans('cruds.detections.fields.detection_level') }}</h4>
                 <div id="morris-donut-dec-level" class="morris-chart m-auto" style="height: 220px;"></div>
+                <div class="row mt-3">
+                    @foreach($detection_count_level as $key => $row)
+                    <div class="col-4">
+                        <p class="text-muted font-15 mb-1 text-center text-truncate" title="{{ session('dec_level')[$row->detection_level] }}">{{ session('dec_level')[$row->detection_level] }}</p>
+                        <h4 class="text-center">{{ $row->count }}</h4>
+                    </div>
+                    @endforeach
+                </div>
+
             </div> <!-- end row-->
         </div>
     </div>
@@ -83,7 +93,7 @@
         <div class="widget-rounded-circle card-box">
             <div class="row align-items-center row-1-items">
                 <div class="col">
-                    <h3 class="ml-3 mb-lg-3" style="font-size: 2rem;">{{ number_format($takedown_cnt) }}
+                    <h3 class="ml-3 mb-lg-2" style="font-size: 2rem;">{{ number_format($takedown_cnt) }}
                         <p class="ml-0 text-muted mb-5" style="font-size: 1rem;">{{ trans('global.take_down') }}</p>
                     </h3>
                 </div>
@@ -189,8 +199,8 @@
     <!-- third party css end -->
     <style>
         .row-1-items {
-            min-height: 220px;
-            max-height: 220px;
+            min-height: 332px;
+            max-height: 332px;
         }
         .row-2-items {
             min-height: 377px;
@@ -222,22 +232,49 @@
         <script src="{{ asset('assets/libs/jquery-toast/jquery.toast.min.js') }}"></script>
         <script src="{{ asset('assets/libs/morris-js/morris.min.js') }}"></script>
         <script src="{{ asset('assets/libs/raphael/raphael.min.js') }}"></script>
+
+        <!-- Flot chart -->
+        <script src="{{ asset('assets/libs/flot-charts/jquery.flot.js') }}"></script>
+        <script src="{{ asset('assets/libs/flot-charts/jquery.flot.tooltip.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/flot-charts/jquery.flot.pie.js') }}"></script>
         <!-- third party js ends -->
         <!-- Datatables init -->
         <script>
             $(document).ready(function(){
-                Morris.Donut({
-                    element: 'morris-donut-dec-level',
-                    data: [
-                        @foreach($detection_count_level as $row)
-                        {label: "{{ session('dec_level')[$row->detection_level] }}", value: "{{ $row->count }}"},
+                let pie_color = ['#ff0000', '#3498DB', '#ffe971'];
+                var data = [
+                        @foreach($detection_count_level as $key => $row)
+                            {label: "{{ session('dec_level')[$row->detection_level] }}", data: "{{ $row->count }}", color: pie_color[{{ $key }}]},
                         @endforeach
-                    ],
-                });
+                    ];
+
+                var options = {
+                    series: {
+                        pie: {
+                            show: true,
+                            label: {show: false},
+                            innerRadius: 0.8,
+                            radius: 1,
+                        },
+                    },
+                    legend: {show: false},
+                    grid: {
+                        hoverable: true
+                    },
+                    tooltip: false,
+                    tooltipOpts: {
+                        cssClass: "flotTip",
+                        content: "%s: %p.0%",
+                        defaultTheme: false,
+                    }
+                };
+
+                $.plot($("#morris-donut-dec-level"), data, options);
+
                 var barColorsArray = ['#ff0000', '#3498DB', '#ffe971','#26B99A', '#DE8244',
                     '#1fc02f', '#887aff','#DE8244'];
                 var colorIndex = -1;
-                var data = [
+                data = [
                     @foreach($detection_cnt as $row)
                         { y: '{{ session('dec_type')[$row->type] }}', a: '{{ $row->count }}'},
                     @endforeach
