@@ -17,7 +17,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6 col-xl-3">
+    <div class="col-md-6 col-xl-4">
         <div class="widget-rounded-circle card-box">
             <div class="row slimscroll row-1-items">
                 <div class="table-responsive ml-2">
@@ -25,17 +25,41 @@
                         <thead class="thead-light">
                         <tr>
                             <th>{{ trans('global.category') }}</th>
-                            <th>{{ trans('global.count') }}</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($detection_cnt as $row)
                             <tr>
                                 <td>
-                                    <h5 class="m-0 font-weight-normal">{{ session('dec_type')[$row->type] }}</h5>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="avatar-md rounded-circle border-dark border">
+                                                <i class="fe-heart font-22 avatar-title text-dark"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-left icon-left">
+                                                <h3 class="text-dark mt-1">58</h3>
+                                                <p class="text-muted mb-1 text-truncate">Total Revenue</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
-                                    <h5 class="m-0 font-weight-normal">{{ number_format($row->count) }}</h5>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="avatar-md rounded-circle border-dark border">
+                                                <i class="fe-heart font-22 avatar-title text-dark"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-left icon-left">
+                                                <h3 class="text-dark mt-1">18</h3>
+                                                <p class="text-muted mb-1 text-truncate">Total Revenue</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -45,6 +69,15 @@
             </div> <!-- end row-->
         </div> <!-- end widget-rounded-circle-->
     </div> <!-- end col-->
+
+    <div class="col-md-6 col-xl-3">
+        <!-- Portlet card -->
+        <div class="card-box">
+            <div class="m-auto">
+                <div id="morris-donut-dec-level" class="morris-chart m-auto" style="height: 220px;"></div>
+            </div> <!-- end row-->
+        </div>
+    </div>
 
     <div class="col-md-6 col-xl-3">
         <div class="widget-rounded-circle card-box">
@@ -63,16 +96,7 @@
         </div> <!-- end widget-rounded-circle-->
     </div>
 
-    <div class="col-md-6 col-xl-3">
-        <!-- Portlet card -->
-        <div class="card-box">
-            <div class="m-auto">
-                <div id="morris-donut-dec-level" class="morris-chart m-auto" style="height: 220px;"></div>
-            </div> <!-- end row-->
-        </div>
-    </div>
-
-    <div class="col-md-6 col-xl-3">
+    <div class="col-md-6 col-xl-2">
         <div class="widget-rounded-circle card-box">
             <div class="row slimscroll row-1-items">
                 <div class="table-responsive ml-2">
@@ -176,6 +200,14 @@
         {
             height: 1.5rem;
             width: 5.2rem;
+        }
+        .icon-left
+        {
+            margin-left: -1.5vw;
+        }
+        .border
+        {
+            border: 2px solid !important;
         }
 
         @media only screen and (max-width: 1024px) {
