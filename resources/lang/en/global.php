@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'services'                             => 'Services',
     'welcome'                              => 'Welcome',
     'my_account'                           => 'My Account',
     'actions'                              => 'Actions',

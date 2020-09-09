@@ -34,13 +34,14 @@ class DashboardController extends Controller
     public function index()
     {
         $detection_cnt = Detection::query()->select('type', DB::raw('count(*) as count'))->groupBy('type')->orderBy('count', 'desc')->get();
+        $notification_icons = ['fe-rss', 'fe-share-2', 'fe-zap', 'fe-tv', 'fe-crop', 'fe-shield-off', 'fe-gitlab', 'fe-bold', 'fe-wifi-off'];
+
         $takedown_cnt = User::whereHas(
                 'roles', function($q){
                     $q->where('name', 'client');
                 })->sum('takedowns');
 
-        $detection_count_level = Detection::query()->select('detection_level', DB::raw('count(*) as count'))->groupBy('detection_level')->orderBy('count', 'desc')->get();
-
+        $detection_count_level = Detection::query()->select('detection_level', DB::raw('count(*) as count'))->groupBy('detection_level')->orderBy('count', 'desc')->limit(3)->get();
         //$tag_list = Tags::query()->orderBy('group')->groupBy('group')->select( 'group', \DB::raw("GROUP_CONCAT(id, '::', tag) as tags"))->get();
         $tag_list = Detection::query()->select('tags', 'ioc')->get();
         $tags = Tags::query()->select('id', 'tag')->get();
@@ -117,7 +118,8 @@ class DashboardController extends Controller
             $detection_count = Detection::query()->select( DB::raw('count(*) as count'))->where('created_at', 'like', $val.'%')->get();
             $decWeeklyCount[$val] = $detection_count[0]->count;
         }
-        return view('pages.dashboard', compact('detection_cnt', 'takedown_cnt', 'detection_count_level', 'tag_ranking', 'iocRes', 'decMonthlyCount', 'decWeeklyCount'));
+        return view('pages.dashboard', compact('detection_cnt', 'takedown_cnt', 'detection_count_level', 'tag_ranking',
+            'iocRes', 'decMonthlyCount', 'decWeeklyCount', 'notification_icons'));
     }
 
     /**
