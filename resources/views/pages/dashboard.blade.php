@@ -253,7 +253,7 @@
                         pie: {
                             show: true,
                             label: {show: false},
-                            innerRadius: 0.8,
+                            innerRadius: 0.87,
                             radius: 1,
                         },
                     },
