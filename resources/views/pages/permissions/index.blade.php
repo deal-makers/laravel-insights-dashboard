@@ -110,7 +110,11 @@
                     paginate: {
                         previous: "<i class='mdi mdi-chevron-left'>",
                         next: "<i class='mdi mdi-chevron-right'>"
-                    }
+                    },
+                    info: "{{ __('global.datatables.showing') }} _START_ {{ __('global.datatables.to') }} _END_ {{ __('global.datatables.of') }} _TOTAL_ {{ __('global.datatables.entries') }}",
+                    search: "{{ __('global.search') }}",
+                    lengthMenu:"{{ __('global.show') }} _MENU_ {{ __('global.datatables.entries') }}",
+                    zeroRecords:    "{{ __('global.datatables.zero_records') }}",
                 },
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");

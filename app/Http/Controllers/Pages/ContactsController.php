@@ -81,7 +81,7 @@ class ContactsController extends Controller
         $contents = $request->contents;
         Contact::query()->updateOrInsert(['client_id' => $client_id, 'detection_id' => $detection_id, 'contact_reason' => $reason], ['client_id' => $client_id, 'detection_id' => $detection_id,
             'contact_reason' => $reason, 'contents' => $contents, 'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),]);
+            'updated_at' => date('Y-m-d H:i:s')]);
 
         if($sendType == "2") //In addition to send Email.
         {

@@ -157,12 +157,13 @@ class UsersController extends Controller
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
-
         if(!is_null($user->avatar) && !empty($user->avatar))
             Storage::delete("images/avatars/".$user->avatar);
 
-        $user->delete();
-
+        if($user->name != 'Admin')
+        {
+            $user->delete();
+        }
         return redirect()->route('users.index');
     }
 

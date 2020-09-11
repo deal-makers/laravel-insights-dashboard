@@ -161,7 +161,11 @@
                     paginate: {
                         previous: "<i class='mdi mdi-chevron-left'>",
                         next: "<i class='mdi mdi-chevron-right'>"
-                    }
+                    },
+                    info: "{{ __('global.datatables.showing') }} _START_ {{ __('global.datatables.to') }} _END_ {{ __('global.datatables.of') }} _TOTAL_ {{ __('global.datatables.entries') }}",
+                    search: "{{ __('global.search') }}",
+                    lengthMenu:"{{ __('global.show') }} _MENU_ {{ __('global.datatables.entries') }}",
+                    zeroRecords:    "{{ __('global.datatables.zero_records') }}",
                 },
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
@@ -171,26 +175,6 @@
             });
         });
 
-        function isConfirm(form)
-        {
-            event.preventDefault();
-            swal({
-                title: "{{ trans('global.areYouSure') }}",
-                text: "{{ trans('global.canNotRevert') }}",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger m-l-10',
-                confirmButtonText: "{{ trans('global.yesDelete') }}"
-            }).then((result) => {
-                if (result.value) {
-                    $(form).submit();
-                } else
-                {
-                    return false;
-                }
-            });
-        }
         let showDetail = (id) => {
             $('#modal_contact_reason').html(`{{ trans('cruds.contacts.fields.reason') }}, ` + $(`#td_datetime_${id}`).text());
             $('#contact_reason').html($(`#td_reason_${id}`).text());

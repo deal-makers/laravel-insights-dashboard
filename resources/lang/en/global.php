@@ -97,6 +97,11 @@ return [
         'colvis'        => 'Column visibility',
         'delete'        => 'Delete selected',
         'zero_selected' => 'No rows selected',
+        'showing'       => 'Showing',
+        'to'            => 'to',
+        'of'            => 'of',
+        'entries'       => 'entries',
+        'zero_records'  => 'No matching records found',
     ],
     'error'                           => [
         'operate_error'          => 'Current Processing is failed.',

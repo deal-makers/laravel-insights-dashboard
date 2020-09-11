@@ -12,8 +12,7 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    function isConfirm(form)
-    {
+    let isConfirm = (form) => {
         event.preventDefault();
         swal({
             title: "{{ trans('global.areYouSure') }}",
@@ -32,4 +31,19 @@
             }
         });
     }
+
+    let changeLang = (str) => {
+        if(str === "{{ session('cur_lang') }}") return;
+
+        $.post("{{ url('change_lang') }}", {lang: str}, function () {
+
+        })
+            .done(function() {
+                location.reload();
+            })
+            .fail(function(res) {
+
+            });
+    }
+
 </script>

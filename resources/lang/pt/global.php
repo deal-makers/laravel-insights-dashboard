@@ -96,6 +96,11 @@ return [
         'colvis'        => 'Visibilidade da coluna',
         'delete'        => 'Apagar selecionado',
         'zero_selected' => 'Nenhuma linha selecionada',
+        'showing'       => 'Mostrando',
+        'to'            => 'para',
+        'of'            => 'do',
+        'entries'       => 'entradas',
+        'zero_records'  => 'Nenhum registro correspondente encontrado',
     ],
     'error'                           => [
         'operate_error'          => 'O processamento atual falhou.',

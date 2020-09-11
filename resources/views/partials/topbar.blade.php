@@ -1,5 +1,21 @@
-
 <ul class="list-unstyled topnav-menu float-right mb-0">
+    <li class="dropdown d-none d-lg-inline-block topbar-dropdown">
+        <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+            <img src="{{ asset('assets/images/flags').'/'.session('cur_lang').'.jpg' }}" alt="lang-image" height="16" class="lang-image">
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+            <!-- item-->
+            <a href="javascript:changeLang('en');" class="dropdown-item">
+                <img src="{{ asset('assets/images/flags/en.jpg') }}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">English</span>
+            </a>
+
+            <!-- item-->
+            <a href="javascript:changeLang('pt');" class="dropdown-item">
+                <img src="{{ asset('assets/images/flags/pt.jpg') }}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Portuguese</span>
+            </a>
+
+        </div>
+    </li>
     @php
         $curUserId = Auth::user()->id;
         if(Auth::user()->hasRole('client'))

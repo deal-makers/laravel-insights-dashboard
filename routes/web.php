@@ -29,8 +29,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('download_file', 'Pages\DetectionsController@downLoadFile');
     Route::resource('tags', 'Pages\TagsController');
     Route::post('tagupdate/{tag}', 'Pages\TagsController@ajaxUpdate');
+    Route::post('change_lang', 'Helper\LangController@ajaxChangeLang');
 
 });
+
 
 Route::get('approval', 'User\DashboardController@approval')->name('approval');
 

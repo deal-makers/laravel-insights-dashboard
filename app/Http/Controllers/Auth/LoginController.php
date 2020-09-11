@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Lang;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Socialite;
 use Auth;
@@ -121,6 +122,8 @@ class LoginController extends Controller
                 'MAC address', 'MUTEX name', 'Observable Composition', 'Organization Name', 'PEHASH', 'Phone number', 'Registration key', 'Serial Number', 'Top-level domain name', 'Unknown', 'Windows Executable File'];
         $cvss = ['0.0 (None)', '0.1 - 3.9 (Low)', '4.0 - 6.9 (Medium)', '7.0 - 8.9 (High)', '9.0 - 10.0 (Critical)'];
         $contactReason = ['Feedback', 'Report', 'Detection', 'Takedown', 'Financial', 'Commercial', 'Other'];
+        $curLang = \App\Models\Lang::query()->where('user_id', $user->id)->get();
+        $availLocale=['en'=>'en', 'pt'=>'pt'];
 
         //Session store.
         session()->put('emergency', $emergency);
@@ -131,5 +134,17 @@ class LoginController extends Controller
         session()->put('ioc', $ioc);
         session()->put('cvss', $cvss);
         session()->put('contact_reason', $contactReason);
+        session()->put('avail_locale', $contactReason);
+
+
+        if(sizeof($curLang) > 0)
+        {
+            //Lang init setting
+            session()->put('cur_lang', $curLang[0]->lang);
+        } else
+        {
+            //Default lang en
+            session()->put('cur_lang', 'en');
+        }
     }
 }

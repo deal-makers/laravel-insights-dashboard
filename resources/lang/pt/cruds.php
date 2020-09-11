@@ -22,7 +22,7 @@ return [
         ],
     ],
     'role'           => [
-        'title'          => 'Funções,
+        'title'          => 'Funções',
         'title_singular' => 'Função',
         'fields'         => [
             'id'                 => 'ID',
@@ -91,7 +91,7 @@ return [
             'email_verified_at_helper' => '',
             'password'                 => 'Senha',
             'password_helper'          => '',
-            'roles'                    => 'Funções,
+            'roles'                    => 'Funções',
             'roles_helper'             => '',
             'remember_token'           => 'Lembrar do token',
             'remember_token_helper'    => '',
