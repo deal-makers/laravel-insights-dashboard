@@ -6,12 +6,20 @@
     <div class="col-12">
         <div class="page-title-box">
             <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="#">@lang('global.system')</a></li>
-                    <li class="breadcrumb-item active">@lang('global.dashboard')</li>
-                </ol>
+                <form class="form-inline">
+                    <div class="form-group">
+                        <div class="input-group input-group-sm">
+                            <input type="hidden" class="form-control flatpickr-input" id="dash-daterange" readonly="readonly"/>
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-blue border-blue text-white">
+                                    <i class="mdi mdi-calendar-range"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <h4 class="page-title">@lang('global.dashboard')</h4>
+            <h4 class="page-title">Dashboard</h4>
         </div>
     </div>
 </div>
@@ -196,6 +204,10 @@
 @push('css')
     <!-- third party css -->
     <link href="{{ asset('assets/libs/jquery-toast/jquery.toast.min.css') }}" rel="stylesheet" type="text/css" />
+
+    <!-- Flat Picker -->
+    <link href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}" rel="stylesheet" type="text/css" />
+
     <!-- third party css end -->
     <style>
         .row-1-items {
@@ -220,6 +232,11 @@
             border: 2px solid !important;
         }
 
+        .flatpickr-input
+        {
+            width: 210px !important;
+        }
+
         @media only screen and (max-width: 1024px) {
 
         }
@@ -233,14 +250,34 @@
         <script src="{{ asset('assets/libs/morris-js/morris.min.js') }}"></script>
         <script src="{{ asset('assets/libs/raphael/raphael.min.js') }}"></script>
 
+        <!-- Flat Picker -->
+        <!-- https://cdnjs.com/libraries/flatpickr  Flatpickr js cnd library-->
+        <script src="{{ asset('assets/libs/flatpickr/flatpickr.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/flatpickr/lang/pt.min.js') }}"></script>
+
         <!-- Flot chart -->
         <script src="{{ asset('assets/libs/flot-charts/jquery.flot.js') }}"></script>
         <script src="{{ asset('assets/libs/flot-charts/jquery.flot.tooltip.min.js') }}"></script>
+
         <script src="{{ asset('assets/libs/flot-charts/jquery.flot.pie.js') }}"></script>
+
         <!-- third party js ends -->
+
         <!-- Datatables init -->
         <script>
             $(document).ready(function(){
+                $("#dash-daterange").flatpickr({
+                    altInput: true,
+                    dateFormat: 'Y-m-d',
+                    mode: "range",
+                    altFormat: "m/d/Y",
+                    defaultDate: "today",
+                    locale: '{{ session('cur_lang') }}',
+                    onChange: function(selectedDates, dateStr, instance) {
+                        console.log(selectedDates);
+                    }
+                });
+
                 let pie_color = ['#ff0000', '#3498DB', '#ffe971'];
                 var data = [
                         @foreach($detection_count_level as $key => $row)
@@ -252,7 +289,7 @@
                     series: {
                         pie: {
                             show: true,
-                            label: {show: false},
+                            label: {show: true},
                             innerRadius: 0.87,
                             radius: 1,
                         },
@@ -263,7 +300,6 @@
                     },
                     tooltip: false,
                     tooltipOpts: {
-                        cssClass: "flotTip",
                         content: "%s: %p.0%",
                         defaultTheme: false,
                     }
