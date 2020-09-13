@@ -40,7 +40,7 @@
                         @foreach($detections as $key => $row)
                             <tr data-entry-id="{{ $row->id }}">
                                 <td>
-                                    {{ $row->dec_id ?? '' }}
+                                    <a href="{{ route('detections.show', $row->id) }}">{{ $row->dec_id ?? '' }}</a>
                                 </td>
                                 <td>
                                     {{ $row->title ?? '' }}
@@ -117,6 +117,7 @@
             $("#datatable").DataTable({
                 scrollY: '60vh',
                 scrollCollapse: true,
+                stateSave: true,
                 language: {
                     paginate: {
                         previous: "<i class='mdi mdi-chevron-left'>",

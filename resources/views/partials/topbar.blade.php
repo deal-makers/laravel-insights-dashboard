@@ -1,5 +1,5 @@
 <ul class="list-unstyled topnav-menu float-right mb-0">
-    <li class="dropdown d-none d-lg-inline-block topbar-dropdown">
+    <li class="dropdown d-lg-inline-block topbar-dropdown">
         <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
             <img src="{{ asset('assets/images/flags').'/'.session('cur_lang').'.jpg' }}" alt="lang-image" height="16" class="lang-image">
         </a>
@@ -49,7 +49,7 @@
             <div class="slimscroll noti-scroll">
                 @if($notiCnt == 0)
                 <a href="javascript:void(0);" class="dropdown-item notify-item">
-                    <p class="notify-details">
+                    <p class="notify-details m-auto">
                         @lang('global.msg.no_notification')
                     </p>
                 </a>

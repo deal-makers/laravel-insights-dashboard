@@ -17,6 +17,8 @@ use App\Models\Tags;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Storage;
 
+use Mail;
+
 class DetectionsController extends Controller
 {
 
@@ -163,6 +165,34 @@ class DetectionsController extends Controller
         $notifyData['send_clients'] = serialize($request->clients);
         $notifyData['seen_users'] = serialize([]);
         Notification::create($notifyData);
+
+        //Notifiy Email Send
+        $sendUsers = User::whereHas('roles', function($role) {
+            $role->where('name', '<>', 'client');
+        })->where('id', '<>', $request->user()->id)->pluck('email')->toArray();;
+
+        $clientList = User::query()->whereIn('id', $request->clients)->pluck('email')->toArray();;
+
+
+        $mailData = array('dec_type' => $insertData['type'], 'new_id' => $notifyData['detection_id'], 'subject'=>'Alerta de Segurança', 'tlp' => session('tlp')[$request->tlp], 'dec_level' => $request->level,
+            'title' => $request->title, 'decription' => $request->description, 'scenario' => $request->scenery, 'pap' => session('pap')[$request->pap], 'alert_id' => $insertData['dec_id'],
+            'ioc' => $iocLst ?? [], 'tech_detail' => $request->tech_detail, 'cve' => json_decode($request->cves, true) ?? [], 'cvss' => session('cvss')[$request->cvss] ?? '', 'recomend' => $request->comment,
+            'reference' => json_decode($request->references, true));
+
+        $from_email = $request->user()->email;
+        $from_name = $request->user()->name;
+        //$to_emails = array_merge($sendUsers, $clientList);
+
+        $to_emails = ['client@localhost.com', 'fstar@localhost.com'];
+
+        Mail::send('mails.notify', $mailData, function($message) use ($to_emails, $from_email, $from_name) {
+            $message->to($to_emails)
+                ->subject('Alerta de Segurança');
+            $message->from($from_email, $from_name);
+        });
+
+        ///////////////////////////
+
         return redirect()->route('detections.index');
     }
 
@@ -574,6 +604,7 @@ class DetectionsController extends Controller
             }
         }
         $detection->delete();
+        Notification::where('detection_id', '=', $detection->id)->delete();
         return redirect()->route('detections.index');
     }
 }
