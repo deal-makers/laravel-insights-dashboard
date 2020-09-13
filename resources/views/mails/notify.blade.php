@@ -1,6 +1,8 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><script type="text/javascript">window["_gaUserPrefs"] = { ioo : function() { return true; } }</script><head>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="http://www.w3.org/1999/xhtml"
+      style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+<head>
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Notification E-MAIL</title>
@@ -68,10 +70,8 @@
             }
 
         }
-    </style><script type="text/javascript" src="chrome-extension://aggiiclaiamajehmlfpkjmlbadmkledi/popup.js" async=""></script><script type="text/javascript" src="chrome-extension://aggiiclaiamajehmlfpkjmlbadmkledi/tat_popup.js" async=""></script></head>
-
-
-
+    </style>
+</head>
 
 <body><div class="WordSection1">
     <div>
@@ -90,7 +90,7 @@
                             <span style="mso-bookmark:_MailAutoSig">
                                 <b style="mso-bidi-font-weight:normal">
                                     <span style="font-size:22.0pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#70AD47;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                        <img width="43" height="41" id="Imagem_x0020_1" alt="signature_1935300106">
+                                        <img src="{{ asset('assets/images/logo-dark-old-1.png') }}" height="40" alt="logo"/>
                                     </span>
                                 </b>
                             </span>
@@ -104,7 +104,7 @@
                             <span style="mso-bookmark:_MailAutoSig">
                                 <b>
                                     <span style="font-size:22.0pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#385723;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                        Alerta de Segurança
+                                        {{ $subject }}
                                     </span>
                                 </b>
                             </span>
@@ -144,8 +144,17 @@
                                     </span>
                                 </span>
                                 <span style="mso-bookmark:_MailAutoSig">
-                                    <span lang="EN-US" style="font-size:10.0pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:yellow;background:black;mso-highlight:black;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                        TLP:AMBER
+                                    @php
+                                        $tlp_color = 'yellow';
+                                        if($tlp == 'TLP:RED')
+                                            $tlp_color = 'red';
+                                        else if($tlp == 'TLP:GREEN')
+                                            $tlp_color = 'green';
+                                        else if($tlp == 'TLP:WHITE')
+                                            $tlp_color = 'white';
+                                    @endphp
+                                    <span lang="EN-US" style="font-size:10.0pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:{{ $tlp_color }};background:black;mso-highlight:black;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                        {{ $tlp }}
                                     </span>
                                 </span>
                                 <span style="mso-bookmark:_MailAutoSig">
@@ -165,7 +174,7 @@
                                     <p class="MsoNormal" align="center" style="text-align:center">
                                             <span style="mso-bookmark:_MailAutoSig">
                                                 <span style="font-size:11.0pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:white;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                    Detection Level: 3 - Critical
+                                                    Nível da detecção: {{ session('dec_level')[$dec_level] }}
                                                 </span>
                                             </span>
                                         <span style="mso-bookmark:_MailAutoSig">
@@ -190,7 +199,7 @@
                                             <a name="TOP"></a>
                                             <b>
                                                 <span style="font-size:15.0pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#595959;text-transform:uppercase;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                    Title of alert here
+                                                    {{ $title }}
                                                 </span>
                                             </b>
                                         </span>
@@ -203,7 +212,8 @@
                             <p class="MsoNormal" style="mso-margin-top-alt:auto;margin-bottom:11.25pt;line-height:15.0pt">
                                         <span style="mso-bookmark:_MailAutoSig">
                                             <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                Detection description here.<o:p></o:p>
+                                                {{ $decription }}
+                                                <o:p></o:p>
                                             </span>
                                         </span>
                             </p>
@@ -217,7 +227,8 @@
                                                         <a name="Hazard_1"></a>
                                                         <b>
                                                             <span style="font-size:13.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#656465;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                Cenário da Ameaça:<o:p></o:p>
+                                                                Cenário da Ameaça:
+                                                                <o:p></o:p>
                                                             </span>
                                                         </b>
                                                     </span>
@@ -225,217 +236,258 @@
 
 
                                     <p class="MsoNormal">
-                                                    <span style="mso-bookmark:_MailAutoSig">
-                                                        <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                            Threat scenary here.<o:p></o:p>
-                                                        </span>
-                                                    </span>
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                {{ $scenario }}
+                                                <o:p></o:p>
+                                            </span>
+                                        </span>
+                                    </p>
+
+                                    <p class="MsoNormal">
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            <b>
+                                                <span style="font-size:13.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#656465;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                    Detalhes Técnicos:<o:p></o:p>
+                                                </span>
+                                            </b>
+                                        </span>
+                                    </p>
+
+                                    <p class="MsoNormal">
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            @php
+                                                $pap_color = 'yellow';
+                                                if($pap == 'PAP:RED')
+                                                    $pap_color = 'red';
+                                                else if($pap == 'PAP:GREEN')
+                                                    $pap_color = 'green';
+                                                else if($pap == 'PAP:WHITE')
+                                                    $pap_color = 'white';
+                                            @endphp
+                                            <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:{{ $pap_color }};background:black;mso-highlight:black;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                {{ $pap }}
+                                            </span>
+                                        </span>
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:red;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                <o:p></o:p>
+                                            </span>
+                                        </span>
+                                    </p>
+                                    <p class="MsoNormal">
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            <b>
+                                                <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                    Alert ID:
+                                                    <a href="{{ route('detections.show', $new_id) }}">{{ $alert_id }}</a>
+                                                    <o:p></o:p>
+                                                </span>
+                                            </b>
+                                        </span>
                                     </p>
 
 
-
                                     <p class="MsoNormal">
-                                                    <span style="mso-bookmark:_MailAutoSig">
-                                                        <b>
-                                                            <span style="font-size:13.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#656465;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                Detalhes Técnicos:<o:p></o:p>
-                                                            </span>
-                                                        </b>
-                                                    </span>
-                                    </p>
-
-
-                                    <p class="MsoNormal"><span style="mso-bookmark:_MailAutoSig"><span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:red;background:black;mso-highlight:black;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">PAP:RED</span></span><span style="mso-bookmark:_MailAutoSig"><span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:red;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-																<o:p></o:p>
-															</span></span></p>
-                                    <p class="MsoNormal">
-                                                    <span style="mso-bookmark:_MailAutoSig">
-                                                        <b>
-                                                            <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                Alert ID: XXX-XXX-XXXX<o:p></o:p>
-                                                            </span>
-                                                        </b>
-                                                    </span>
-                                    </p>
-
-
-                                    <p class="MsoNormal">
-                                                    <span style="mso-bookmark:_MailAutoSig">
-                                                        <b>
-                                                            <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                Affected Product:<o:p></o:p>
-                                                            </span>
-                                                        </b>
-                                                    </span>
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            <b>
+                                                <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                    Detalhes:
+                                                    <o:p></o:p>
+                                                </span>
+                                            </b>
+                                        </span>
                                     </p>
 
                                     <ul style="margin-top:0cm" type="disc">
                                         <li class="MsoListParagraph" style="margin-left:0cm;mso-list:l1 level1 lfo3">
-                                                        <span style="mso-bookmark:_MailAutoSig">
-                                                            <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                Each product is a new bullet<o:p></o:p>
-                                                            </span>
-                                                        </span>
+                                            <span style="mso-bookmark:_MailAutoSig">
+                                                <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                    {{ $tech_detail }}
+                                                    <o:p></o:p>
+                                                </span>
+                                            </span>
                                         </li>
 
                                     </ul>
 
+                                    @if(sizeof($ioc) > 0)
                                     <p class="MsoNormal">
-                                                    <span style="mso-bookmark:_MailAutoSig">
-                                                        <b>
-                                                            <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                Indicators of Compromise (IOCs):<o:p></o:p>
-                                                            </span>
-                                                        </b>
-                                                    </span>
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            <b>
+                                                <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                    Indicators of Compromise (IOCs):<o:p></o:p>
+                                                </span>
+                                            </b>
+                                        </span>
                                     </p>
 
                                     <ul style="margin-top:0cm" type="disc">
+                                        @foreach($ioc as $key => $row)
                                         <li class="MsoListParagraph" style="margin-left:0cm;mso-list:l1 level1 lfo3">
-															<span style="mso-bookmark:_MailAutoSig">
-                                                                <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                    Type – Value &lt; example to format<o:p></o:p>
-                                                                </span>
-                                                            </span>
+                                            <span style="mso-bookmark:_MailAutoSig">
+                                                <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                    {{ session('ioc')[$key] }} – {{ $row }}<o:p></o:p>
+                                                </span>
+                                            </span>
                                         </li>
+                                        @endforeach
                                     </ul>
+                                    @endif
 
-                                    <p class="MsoNormal">
+                                    @if($dec_type == 2)
+                                        @if(sizeof($cve) > 0)
+                                        <p class="MsoNormal">
+                                            <span style="mso-bookmark:_MailAutoSig">
+                                                <b>
+                                                    <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                        CVE:
+                                                    </span>
+                                                </b>
+                                            </span>
+                                            <ul style="margin-top:0cm" type="disc">
+                                                @foreach($cve as $row)
+                                                 <li class="MsoListParagraph" style="margin-left:0cm;mso-list:l1 level1 lfo3">
                                                     <span style="mso-bookmark:_MailAutoSig">
-                                                        <b>
-                                                            <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                CVE:
-                                                            </span>
-                                                        </b>
-                                                    </span>
-                                        <span style="mso-bookmark:_MailAutoSig">
-                                                        <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                            XXX.XXXX
-                                                            <b><o:p></o:p></b>
-                                                        </span>
-                                                    </span>
-                                    </p>
-
-
-                                    <p class="MsoNormal">
-                                                    <span style="mso-bookmark:_MailAutoSig">
-                                                        <b>
-                                                            <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                CVSS:
-                                                            </span>
-                                                        </b>
-                                                    </span>
-                                        <span style="mso-bookmark:_MailAutoSig">
-                                                        <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                            XXXX
+                                                        <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                             {{ $row['value'] }}
                                                             <o:p></o:p>
                                                         </span>
                                                     </span>
+                                                 </li>
+                                                @endforeach
+                                            </ul>
+                                        </p>
+                                        @endif
+
+                                        @if($cvss != '')
+                                        <p class="MsoNormal">
+                                            <span style="mso-bookmark:_MailAutoSig">
+                                                <b>
+                                                    <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                        CVSS:
+                                                    </span>
+                                                </b>
+                                            </span>
+                                            <span style="mso-bookmark:_MailAutoSig">
+                                                <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                    {{ $cvss }}
+                                                    <o:p></o:p>
+                                                </span>
+                                            </span>
+                                        </p>
+                                        @endif
+                                    @endif
+
+                                    <p class="MsoNormal">
+                                            <span style="mso-bookmark:_MailAutoSig">
+                                                <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                    <br>
+                                                </span>
+                                            </span>
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            <b>
+                                                <span style="font-size:13.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#656465;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                    Recomendações:
+                                                </span>
+                                            </b>
+                                        </span>
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                <o:p></o:p>
+                                            </span>
+                                        </span>
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                {{ $recomend }}
+                                                <o:p></o:p>
+                                            </span>
+                                        </span>
                                     </p>
 
                                     <p class="MsoNormal">
-                                                    <span style="mso-bookmark:_MailAutoSig">
-                                                        <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                            <br>
-                                                        </span>
-                                                    </span>
-                                        <span style="mso-bookmark:_MailAutoSig"><b>
-                                                        <span style="font-size:13.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#656465;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                            Recomendações:
-                                                        </span>
-                                                    </b>
-                                                    </span>
                                         <span style="mso-bookmark:_MailAutoSig">
-                                                        <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                            <o:p></o:p>
-                                                        </span>
-                                                    </span>
+                                            <b>
+                                                <span style="font-size:13.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#656465;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                    Referências:
+                                                </span>
+                                            </b>
+                                        </span>
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            <span style="mso-fareast-font-family:Times New Roman;mso-bidi-font-family:Calibri;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                <o:p></o:p>
+                                            </span>
+                                        </span>
                                     </p>
 
                                     <ul style="margin-top:0cm" type="disc">
-                                        <li class="MsoNormal" style="mso-list:l4 level1 lfo7">
-                                                        <span style="mso-bookmark:_MailAutoSig">
-                                                            <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                Recommendations here<o:p></o:p>
-                                                            </span>
-                                                        </span>
-                                        </li>
-
-                                        <li class="MsoNormal" style="mso-list:l4 level1 lfo7">
-                                                        <span style="mso-bookmark:_MailAutoSig">
-                                                            <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                Each line is a new bullet.<o:p></o:p>
-                                                            </span>
-                                                        </span>
-                                        </li>
-
-                                        <li class="MsoNormal" style="mso-list:l4 level1 lfo7">
-                                                        <span style="mso-bookmark:_MailAutoSig">
-                                                            <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                Test, test, test<o:p></o:p>
-                                                            </span>
-                                                        </span>
-                                        </li>
-
-                                        <li class="MsoNormal" style="mso-list:l4 level1 lfo7"><span style="mso-bookmark:_MailAutoSig"><span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">XXXXX
-																	<o:p></o:p></span></span></li>
+                                        @foreach($reference as $row)
+                                            <li class="MsoNormal" style="mso-list:l4 level1 lfo7">
+                                            <span style="mso-bookmark:_MailAutoSig">
+                                                <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                    {{ $row['value'] }}
+                                                    <o:p></o:p>
+                                                </span>
+                                            </span>
+                                            </li>
+                                        @endforeach
                                     </ul>
 
+                                    <p class="MsoNormal">
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            <b>
+                                                <span style="font-size:13.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#656465;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                    Aviso de Responsabilidade:
+                                                </span>
+                                            </b>
+                                        </span>
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                <o:p></o:p>
+                                            </span>
+                                        </span>
+                                    </p>
 
-                                    <p class="MsoNormal"><span style="mso-bookmark:_MailAutoSig"><b><span style="font-size:13.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#656465;mso-fareast-language:PT-BR;mso-no-proof:yes">Referências:</span></b></span><span style="mso-bookmark:_MailAutoSig"><span style="mso-fareast-font-family:Times New Roman;mso-bidi-font-family:Calibri;mso-fareast-language:PT-BR;mso-no-proof:yes">
-																<o:p></o:p>
-															</span></span></p>
-
-                                    <ul style="margin-top:0cm" type="disc">
-                                        <li class="MsoNormal" style="mso-list:l3 level1 lfo10">
-                                                        <span style="mso-bookmark:_MailAutoSig">
-                                                            <span lang="EN-US" style="mso-fareast-font-family:Times New Roman;mso-bidi-font-family:Calibri;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                References here.
-                                                            </span>
-                                                        </span>
-                                            <span style="mso-bookmark:_MailAutoSig">
-                                                            <span lang="EN-US" style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-                                                                Each line is a new bullet
-                                                            </span>
-                                                        </span>
-                                            <span style="mso-bookmark:_MailAutoSig">
-                                                            <span lang="EN-US" style="mso-fareast-font-family:Times New Roman;mso-bidi-font-family:Calibri;mso-ansi-language:EN-US;mso-fareast-language:PT-BR;mso-no-proof:yes">
-																	<o:p></o:p>
-																</span></span></li>
-                                    </ul>
-
-
-                                    <p class="MsoNormal"><span style="mso-bookmark:_MailAutoSig"><b><span style="font-size:13.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#656465;mso-fareast-language:PT-BR;mso-no-proof:yes">Aviso
-																	de Responsabilidade:</span></b></span><span style="mso-bookmark:_MailAutoSig"><span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
-																<o:p></o:p>
-															</span></span></p>
-
-                                    <p class="MsoNormal"><span style="mso-bookmark:_MailAutoSig"><span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">É
-																de responsabilidade dos envolvidos o devido cumprimento das ações
-																necessárias para mitigar as ameaças apontadas neste Alerta, tendo como
-																objetivo reduzir o risco da companhia e sua superfície de ataque. A
-																omissão na aplicação das devidas ações podem diretamente ou
-																indiretamente serem ligadas ao descumprimento de legislações como Lei
-																Geral de Proteção de Dados nº 13.709/2018, Marco Civil da Internet nº
-																12.965/2014, Política Nacional de Segurança da Informação (Decreto nº
-																9.637/2018) e Estratégia Nacional de Segurança Cibernética (Decreto nº
-																10.222/2020) bem como Políticas e Normas internas da
-																companhia.<br>&nbsp;<o:p></o:p></span></span></p>
+                                    <p class="MsoNormal">
+                                        <span style="mso-bookmark:_MailAutoSig">
+                                            <span style="font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                                Éde responsabilidade dos envolvidos o devido cumprimento das ações
+                                                necessárias para mitigar as ameaças apontadas neste Alerta, tendo como
+                                                objetivo reduzir o risco da companhia e sua superfície de ataque. A
+                                                omissão na aplicação das devidas ações podem diretamente ou
+                                                indiretamente serem ligadas ao descumprimento de legislações como Lei
+                                                Geral de Proteção de Dados nº 13.709/2018, Marco Civil da Internet nº
+                                                12.965/2014, Política Nacional de Segurança da Informação (Decreto nº
+                                                9.637/2018) e Estratégia Nacional de Segurança Cibernética (Decreto nº
+                                                10.222/2020) bem como Políticas e Normas internas da
+                                                companhia.
+												<br>&nbsp;
+                                                <o:p></o:p>
+                                            </span>
+                                        </span>
+                                    </p>
                                 </td>
                             </tr>
-
-                            </tbody></table><span style="mso-bookmark:_MailAutoSig"><a name="Ops_1"></a><a name="Market_1"></a></span>
-                            <p class="MsoNormal"><span style="mso-bookmark:_MailAutoSig"><span style="mso-fareast-font-family:Times New Roman;mso-bidi-font-family:Calibri;mso-fareast-language:PT-BR;mso-no-proof:yes">
-													<o:p></o:p>
-												</span></span></p>
-                        </td>
-                    </tr>
-                    </tbody></table><span style="mso-bookmark:_MailAutoSig"></span>
-                </td>
-            </tr>
-            <tr style="mso-yfti-irow:3;mso-yfti-lastrow:yes">
-                <td style="border:none;background:#CCCCCC;padding:15.0pt 15.0pt 15.0pt 15.0pt">
-                    <p class="MsoNormal" style="mso-margin-top-alt:auto;margin-bottom:11.25pt;text-align:justify;line-height:7.5pt"><span style="mso-bookmark:_MailAutoSig"><span style="font-size:7.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#656465;mso-fareast-language:PT-BR;mso-no-proof:yes">Cherokee
+                            </tbody>
+                        </table>
+                        <span style="mso-bookmark:_MailAutoSig"><a name="Ops_1"></a><a name="Market_1"></a></span>
+                        <p class="MsoNormal">
+                            <span style="mso-bookmark:_MailAutoSig">
+                                <span style="mso-fareast-font-family:Times New Roman;mso-bidi-font-family:Calibri;mso-fareast-language:PT-BR;mso-no-proof:yes">
+                                    <o:p></o:p>
+                                </span>
+                            </span>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <span style="mso-bookmark:_MailAutoSig"></span>
+        </td>
+        </tr>
+        <tr style="mso-yfti-irow:3;mso-yfti-lastrow:yes">
+            <td style="border:none;background:#CCCCCC;padding:15.0pt 15.0pt 15.0pt 15.0pt">
+                <p class="MsoNormal" style="mso-margin-top-alt:auto;margin-bottom:11.25pt;text-align:justify;line-height:7.5pt"><span style="mso-bookmark:_MailAutoSig"><span style="font-size:7.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#656465;mso-fareast-language:PT-BR;mso-no-proof:yes">Cherokee
 										Security ICMA – Inteligência Cibernética e Monitoramento de Ameaças.<br>E-mail:
 									</span></span><a href="mailto:icma@cherokee.net.br"><span style="mso-bookmark:_MailAutoSig"><span style="font-size:7.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#595959;mso-fareast-language:PT-BR;mso-no-proof:yes">icma@cherokee.net.br</span></span><span style="mso-bookmark:_MailAutoSig"></span></a><span style="mso-bookmark:_MailAutoSig"><span style="font-size:7.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;color:#656465;mso-fareast-language:PT-BR;mso-no-proof:yes">
 										| Tel. +55 (11) 4063-6465.</span></span><span style="mso-bookmark:_MailAutoSig"></span><span style="mso-bookmark:_MailAutoSig"><span style="font-size:7.5pt;font-family:Arial,sans-serif;mso-fareast-font-family:Times New Roman;mso-fareast-language:PT-BR;mso-no-proof:yes">
@@ -474,6 +526,6 @@
     <p class="MsoNormal">
         <o:p>&nbsp;</o:p>
     </p>
-</div>
-
-</body></html>
+    </div>
+    </body>
+</html>
