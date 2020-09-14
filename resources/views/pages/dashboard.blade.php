@@ -163,8 +163,6 @@
     </div>
 </div>
 
-
-
 @endsection
 @push('css')
     <!-- third party css -->
@@ -262,6 +260,8 @@
 
         <!-- Jqplot chart -->
         <script src="{{ asset('assets/libs/jqplot/jquery.jqplot.js') }}"></script>
+        <script src="{{ asset('assets/libs/jqplot/jqplot.cursor.js') }}"></script>
+        <script src="{{ asset('assets/libs/jqplot/jqplot.highlighter.js') }}"></script>
         <script src="{{ asset('assets/libs/jqplot/jqplot.pieRenderer.js') }}"></script>
         <script src="{{ asset('assets/libs/jqplot/jqplot.donutRenderer.js') }}"></script>
 
@@ -284,9 +284,12 @@
                     onClose: function(selectedDates, dateStr, instance) {
                         let startDate = formatDate(selectedDates[0]);
                         let endDate = formatDate(selectedDates[1]);
+                        if(startDate == "{{ session('start_date') }}" &&  endDate == "{{ session('end_date')}}")
+                            return false;
                         $.post("{{ url('reg_daterange') }}", {start_date: startDate, end_date: endDate}, function () {
 
                         }).done(function() {
+                            curDataRange = dateStr;
                             location.reload();
                         }).fail(function(res) {
 
@@ -336,14 +339,13 @@
                         marginTop: '15px',
                         fontSize: '9pt',
                         borderWidth: 0.0,
-                    }
+                    },
+                    highlighter: {
+                        show: true,
+                        useAxesFormatters: false,
+                        tooltipFormatString: '%s'
+                    },
                 });
-
-                data = [
-                    @foreach($decWeeklyCount as $key=>$val)
-                    { y: '{{ $key }}', a: '{{ $val }}'},
-                    @endforeach
-                ];
 
                 let colors = ["#4a81d4"];
 
