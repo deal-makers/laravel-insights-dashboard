@@ -19,7 +19,7 @@
                     </div>
                 </form>
             </div>
-            <h4 class="page-title">Dashboard</h4>
+            <h4 class="page-title">{{ __('global.dashboard') }}</h4>
         </div>
     </div>
 </div>
@@ -80,19 +80,10 @@
 
     <div class="col-md-6 col-xl-3" id="morris-donut-dec-div">
         <!-- Portlet card -->
-        <div class="card-box">
+        <div class="card-box row-2-items">
             <div class="m-auto">
                 <h4 class="header-title mb-2">{{ trans('cruds.detections.fields.detection_level') }}</h4>
-                <div id="morris-donut-dec-level" class="morris-chart m-auto" style="height: 220px;"></div>
-                <div class="row mt-3">
-                    @foreach($detection_count_level as $key => $row)
-                    <div class="col-4">
-                        <p class="text-muted font-15 mb-1 text-center text-truncate" title="{{ session('dec_level')[$row->detection_level] }}">{{ session('dec_level')[$row->detection_level] }}</p>
-                        <h4 class="text-center">{{ $row->count }}</h4>
-                    </div>
-                    @endforeach
-                </div>
-
+                <div id="morris-donut-dec-level" class="morris-chart m-auto"></div>
             </div> <!-- end row-->
         </div>
     </div>
@@ -208,6 +199,9 @@
     <!-- Flat Picker -->
     <link href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}" rel="stylesheet" type="text/css" />
 
+    <!-- Jqplot chart -->
+    <link href="{{ asset('assets/libs/jqplot/jquery.jqplot.css') }}" rel="stylesheet" type="text/css" />
+
     <!-- third party css end -->
     <style>
         .row-1-items {
@@ -236,6 +230,10 @@
         {
             width: 210px !important;
         }
+        .morris-chart
+        {
+            height: 340px;
+        }
 
         @media only screen and (max-width: 1024px) {
 
@@ -259,7 +257,10 @@
         <script src="{{ asset('assets/libs/flot-charts/jquery.flot.js') }}"></script>
         <script src="{{ asset('assets/libs/flot-charts/jquery.flot.tooltip.min.js') }}"></script>
 
-        <script src="{{ asset('assets/libs/flot-charts/jquery.flot.pie.js') }}"></script>
+        <!-- Jqplot chart -->
+        <script src="{{ asset('assets/libs/jqplot/jquery.jqplot.js') }}"></script>
+        <script src="{{ asset('assets/libs/jqplot/jqplot.pieRenderer.js') }}"></script>
+        <script src="{{ asset('assets/libs/jqplot/jqplot.donutRenderer.js') }}"></script>
 
         <!-- third party js ends -->
 
@@ -271,50 +272,69 @@
                     dateFormat: 'Y-m-d',
                     mode: "range",
                     altFormat: "m/d/Y",
-                    defaultDate: "today",
+                    defaultDate: ["2017-08-29", "2017-08-29"],
                     locale: '{{ session('cur_lang') }}',
-                    onChange: function(selectedDates, dateStr, instance) {
-                        console.log(selectedDates);
+                    onClose: function(selectedDates, dateStr, instance) {
+                        let startDate = formatDate(selectedDates[0]);
+                        let endDate = formatDate(selectedDates[1]);
+                        $.post("{{ url('change_lang') }}", {lang: str}, function () {
+
+
+                        }).done(function() {
+
+                            location.reload();
+                        }).fail(function(res) {
+
+                        });
                     }
                 });
 
-                let pie_color = ['#ff0000', '#3498DB', '#ffe971'];
                 var data = [
                         @foreach($detection_count_level as $key => $row)
-                            {label: "{{ session('dec_level')[$row->detection_level] }}", data: "{{ $row->count }}", color: pie_color[{{ $key }}]},
+                            ["{{ session('dec_level')[$row->detection_level] }}", {{ $row->count }}],
                         @endforeach
                     ];
 
-                var options = {
-                    series: {
-                        pie: {
-                            show: true,
-                            label: {show: true},
-                            innerRadius: 0.87,
-                            radius: 1,
-                        },
+                $.jqplot('morris-donut-dec-level', [data], {
+                    seriesDefaults: {
+                        // make this a donut chart.
+                        renderer:$.jqplot.DonutRenderer,
+                        seriesColors: ['#ff0000', '#7fc6f5', '#ffe971','#26B99A', '#DE8244',
+                            '#b3deb8', '#887aff','#DE8244', '#ffd3dc', '#AA0BAC', '#00FF0A'],
+                        rendererOptions:{
+                            // Donut's can be cut into slices like pies.
+                            sliceMargin: 2,
+                            diameter : 180,
+                            // Pies and donuts can start at any arbitrary angle.
+                            startAngle: -90,
+                            showDataLabels: true,
+                            dataLabels: 'value',
+                            totalLabel: true,
+                        }
                     },
-                    legend: {show: false},
                     grid: {
-                        hoverable: true
+                        gridLineColor: 'red',    // *Color of the grid lines.
+                        background: 'white',     // CSS color spec for background color of grid.
+                        borderWidth: 0.0,        // pixel width of border around grid.
+                        shadow: false,           // draw a shadow for grid.
                     },
-                    tooltip: false,
-                    tooltipOpts: {
-                        content: "%s: %p.0%",
-                        defaultTheme: false,
+                    legend: {
+                        show:true,
+                        location: 's',
+                        renderer: $.jqplot.EnhancedPieLegendRenderer,
+                        rendererOptions: {
+                            numberColumns: 2,
+                        }
                     }
-                };
-
-                $.plot($("#morris-donut-dec-level"), data, options);
+                });
 
                 var barColorsArray = ['#ff0000', '#3498DB', '#ffe971','#26B99A', '#DE8244',
                     '#1fc02f', '#887aff','#DE8244'];
-                var colorIndex = -1;
                 data = [
                     @foreach($detection_cnt as $row)
                         { y: '{{ session('dec_type')[$row->type] }}', a: '{{ $row->count }}'},
                     @endforeach
-                    ],
+                    ];
                 config = {
                     data: data,
                     xkey: 'y',
@@ -411,8 +431,6 @@
                     Morris.Area(config);
 
                 });
-
-
             });
         </script>
 @endpush
