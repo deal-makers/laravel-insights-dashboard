@@ -25,7 +25,7 @@
             @csrf
             @method('PATCH')
             <div class="form-group {{ $errors->has('current_password') ? 'has-error' : '' }}">
-                <label for="current_password">Current password *</label>
+                <label for="current_password">{{ __('global.current_password') }} *</label>
                 <input type="password" id="current_password" minlength="6" name="current_password" class="form-control" required>
                 @if($errors->first() == "Current password is incorrect")
                     <div class="mt-1" style="color: #e6334d; font-weight: 500;">
@@ -33,7 +33,7 @@
                     </div>@endif
             </div>
             <div class="form-group {{ $errors->has('new_password') ? 'has-error' : '' }}">
-                <label for="new_password">New password *</label>
+                <label for="new_password">{{ __('global.new_password') }} *</label>
                 <input type="password" id="new_password" name="new_password" minlength="6" class="form-control" required>
                 @if($errors->has('new_password'))
                     <div class="mt-1" style="color: #e6334d; font-weight: 500;">
@@ -42,7 +42,7 @@
                 @endif
             </div>
             <div class="form-group {{ $errors->has('new_password_confirmation') ? 'has-error' : '' }}">
-                <label for="new_password_confirmation">New password confirmation *</label>
+                <label for="new_password_confirmation">{{ __('global.login_password_confirmation') }} *</label>
                 <input type="password" id="new_password_confirmation" name="new_password_confirmation" minlength="6" class="form-control" required>
                 @if($errors->has('new_password_confirmation'))
                     <div class="mt-1" style="color: #e6334d; font-weight: 500;">

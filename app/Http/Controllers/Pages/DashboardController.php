@@ -41,7 +41,7 @@ class DashboardController extends Controller
                     $q->where('name', 'client');
                 })->sum('takedowns');
 
-        $detection_count_level = Detection::query()->select('detection_level', DB::raw('count(*) as count'))->groupBy('detection_level')->orderBy('count', 'desc')->limit(3)->get();
+        $detection_count_level = Detection::query()->select('detection_level', DB::raw('count(*) as count'))->groupBy('detection_level')->orderBy('count', 'desc')->limit(4)->get();
         //$tag_list = Tags::query()->orderBy('group')->groupBy('group')->select( 'group', \DB::raw("GROUP_CONCAT(id, '::', tag) as tags"))->get();
         $tag_list = Detection::query()->select('tags', 'ioc')->get();
         $tags = Tags::query()->select('id', 'tag')->get();

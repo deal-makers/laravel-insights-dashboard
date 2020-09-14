@@ -40,7 +40,7 @@
                         @foreach($detections as $key => $row)
                             <tr data-entry-id="{{ $row->id }}">
                                 <td>
-                                    {{ $row->dec_id ?? '' }}
+                                    <a href="{{ route('detections.show', $row->id) }}">{{ $row->dec_id ?? '' }}</a>
                                 </td>
                                 <td>
                                     {{ $row->title ?? '' }}
@@ -117,11 +117,16 @@
             $("#datatable").DataTable({
                 scrollY: '60vh',
                 scrollCollapse: true,
+                stateSave: true,
                 language: {
                     paginate: {
                         previous: "<i class='mdi mdi-chevron-left'>",
                         next: "<i class='mdi mdi-chevron-right'>"
-                    }
+                    },
+                    info: "{{ __('global.datatables.showing') }} _START_ {{ __('global.datatables.to') }} _END_ {{ __('global.datatables.of') }} _TOTAL_ {{ __('global.datatables.entries') }}",
+                    search: "{{ __('global.search') }}",
+                    lengthMenu:"{{ __('global.show') }} _MENU_ {{ __('global.datatables.entries') }}",
+                    zeroRecords:    "{{ __('global.datatables.zero_records') }}",
                 },
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
@@ -130,27 +135,6 @@
                 "order": [[ 0, "asc" ]]
             });
         });
-
-        function isConfirm(form)
-        {
-            event.preventDefault();
-            swal({
-                title: "{{ trans('global.areYouSure') }}",
-                text: "{{ trans('global.canNotRevert') }}",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger m-l-10',
-                confirmButtonText: "{{ trans('global.yesDelete') }}"
-            }).then((result) => {
-                if (result.value) {
-                    $(form).submit();
-                } else
-                {
-                    return false;
-                }
-            });
-        }
 
     </script>
 @endpush

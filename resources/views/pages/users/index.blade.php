@@ -87,7 +87,7 @@
                                         <i class='fe-edit'></i>
                                         {{ trans('global.edit') }}
                                     </a>
-
+                                    @if($user->name != 'Admin')
                                     <form action="{{ route('users.destroy', $user->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -96,6 +96,7 @@
                                             @lang('global.delete')
                                         </button>
                                     </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -147,13 +148,17 @@
                     paginate: {
                         previous: "<i class='mdi mdi-chevron-left'>",
                         next: "<i class='mdi mdi-chevron-right'>"
-                    }
+                    },
+                    info: "{{ __('global.datatables.showing') }} _START_ {{ __('global.datatables.to') }} _END_ {{ __('global.datatables.of') }} _TOTAL_ {{ __('global.datatables.entries') }}",
+                    search: "{{ __('global.search') }}",
+                    lengthMenu:"{{ __('global.show') }} _MENU_ {{ __('global.datatables.entries') }}",
+                    zeroRecords:    "{{ __('global.datatables.zero_records') }}",
                 },
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                     $('.dataTables_scrollBody').css('min-height', '460px');
                 },
-                "order": [[ 0, "desc" ]]
+                "order": [[ 1, "asc" ]]
             });
         });
     </script>

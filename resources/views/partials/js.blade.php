@@ -12,8 +12,7 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    function isConfirm(form)
-    {
+    let isConfirm = (form) => {
         event.preventDefault();
         swal({
             title: "{{ trans('global.areYouSure') }}",
@@ -32,4 +31,33 @@
             }
         });
     }
+
+    let changeLang = (str) => {
+        if(str === "{{ session('cur_lang') }}") return;
+
+        $.post("{{ url('change_lang') }}", {lang: str}, function () {
+
+        })
+            .done(function() {
+                location.reload();
+            })
+            .fail(function(res) {
+
+            });
+    }
+
+    let formatDate = (date) => {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
 </script>

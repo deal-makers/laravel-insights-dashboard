@@ -48,4 +48,8 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Tags', 'user_id');
     }
 
+    public function lang()
+    {
+        return $this->hasMany('App\Models\Lang', 'user_id');
+    }
 }
