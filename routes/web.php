@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('tags', 'Pages\TagsController');
     Route::post('tagupdate/{tag}', 'Pages\TagsController@ajaxUpdate');
     Route::post('change_lang', 'Helper\LangController@ajaxChangeLang');
+    Route::post('reg_daterange', 'Helper\CommonController@ajaxSessionDateRange');
 
 });
 

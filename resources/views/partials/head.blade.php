@@ -60,5 +60,35 @@
     {
         background-color: #5a5959 !important;
     }
+    /*.dropdown-menu-right {*/
+    /*    left: 0 !important;*/
+    /*}*/
+    @media (max-width: 768px) {
+        .dropdown-lg {
+            width: 320px;
+        }
+        .navbar-custom .dropdown .dropdown-menu {
+            left: 0px!important;
+            width: 95% !important;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .navbar-custom .dropdown {
+            position: static;
+        }
+        .navbar-custom .dropdown .dropdown-menu {
+            left: 10px!important;
+            right: 10px!important;
+            width: 95% !important;
+        }
+    }
+
+    @media (min-width: 600px)
+    {
+        .dropdown-lg {
+            width: 320px;
+        }
+    }
 
 </style>

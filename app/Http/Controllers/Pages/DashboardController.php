@@ -33,65 +33,95 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $detection_cnt = Detection::query()->select('type', DB::raw('count(*) as count'))->groupBy('type')->orderBy('count', 'desc')->get();
-        $notification_icons = ['fe-rss', 'fe-share-2', 'fe-zap', 'fe-tv', 'fe-crop', 'fe-shield-off', 'fe-gitlab', 'fe-bold', 'fe-wifi-off'];
+        $curDate = date('Y-m-d');
+        $currentWeek = $this->rangeWeek($curDate);
+
+        $start_date = session()->get('start_date');
+        if (!isset($start_date)) {
+            session()->put('start_date', $currentWeek['start']);
+            session()->put('end_date', $currentWeek['end']);
+        }
+
+        $start_date = session()->get('start_date');
+        $end_date = session()->get('end_date');
+
+        $detection_count_list = [];
+
+        foreach (session('dec_type') as $key => $value) {
+            $detection_cnt = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])->where('type', '=', $key)->select(DB::raw('count(*) as count'))->groupBy('type')->orderBy('count', 'desc')->get();
+            if (sizeof($detection_cnt) > 0)
+                $detection_count_list[$key] = $detection_cnt[0]->count;
+            else
+                $detection_count_list[$key] = 0;
+        }
+        arsort($detection_count_list);
 
         $takedown_cnt = User::whereHas(
-                'roles', function($q){
-                    $q->where('name', 'client');
-                })->sum('takedowns');
+            'roles', function ($q) {
+            $q->where('name', 'client');
+        })->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])
+            ->sum('takedowns');
 
-        $detection_count_level = Detection::query()->select('detection_level', DB::raw('count(*) as count'))->groupBy('detection_level')->orderBy('count', 'desc')->limit(4)->get();
+        $detection_count_list[sizeof(session('dec_type'))] = (int)$takedown_cnt;
+
+
+        $notification_icons = ['fe-rss', 'fe-share-2', 'fe-zap', 'fe-tv', 'fe-crop', 'fe-shield-off', 'fe-gitlab', 'fe-bold', 'fe-wifi-off', 'mdi mdi-rotate-225 mdi-account'];
+        $notification_colors = ['danger', 'warning', 'success', 'primary', 'blue', 'pink', 'info', 'warning', 'primary', 'dark'];
+
+        $detection_count_level = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])->select('detection_level', DB::raw('count(*) as count'))->groupBy('detection_level')->orderBy('count', 'desc')->limit(4)->get();
         //$tag_list = Tags::query()->orderBy('group')->groupBy('group')->select( 'group', \DB::raw("GROUP_CONCAT(id, '::', tag) as tags"))->get();
-        $tag_list = Detection::query()->select('tags', 'ioc')->get();
+        $tag_list = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])->select('tags', 'ioc', 'id', 'dec_id')->get();
         $tags = Tags::query()->select('id', 'tag')->get();
         $tag_ranking = [];
-        foreach ($tags as $tag)
-        {
+        foreach ($tags as $tag) {
             $curCnt = 0;
             $tag_ranking[$tag->tag] = 0;
-            foreach ($tag_list as $row)
-            {
-               $curTagList =  unserialize($row->tags);
-               foreach ($curTagList as $val)
-               {
-                   if($tag->id == $val)
-                       $tag_ranking[$tag->tag] ++;
-               }
+            foreach ($tag_list as $row) {
+                $curTagList = unserialize($row->tags);
+                foreach ($curTagList as $val) {
+                    if ($tag->id == $val)
+                        $tag_ranking[$tag->tag]++;
+                }
             }
         }
+
         arsort($tag_ranking);
         $tag_ranking = array_diff($tag_ranking, [0]);
 
         //get IOC Frequency of appearance//
         $curIocList = [];
-        foreach ($tag_list as $row)
-        {
-            if(is_null($row->ioc) || $row->ioc == '') continue;
+        foreach ($tag_list as $row) {
+            if (is_null($row->ioc) || $row->ioc == '') continue;
             $newIocArray = [];
             $iocVal = unserialize($row->ioc);
-            foreach ($iocVal as $key => $ioc)
-            {
-                $newIocArray[] = $key.'|*\/*|'.$ioc;
+            foreach ($iocVal as $key => $ioc) {
+                $newIocArray[] = [$key . '|*\/*|' . $ioc, $row->id, $row->dec_id];
             }
             $curIocList = array_merge($curIocList, $newIocArray);
         }
+
         $iocRes = [];
-        for($index = 0; $index < sizeof($curIocList); $index++)
-        {
+        for ($index = 0; $index < sizeof($curIocList); $index++) {
             $cnt = 0;
-            for($indexY = 1; $indexY < sizeof($curIocList) - 1; $indexY++)
-            {
-                if($curIocList[$index] == $curIocList[$indexY])
-                {
-                    $cnt ++;
+            for ($indexY = 1; $indexY < sizeof($curIocList) - 1; $indexY++) {
+                if ($curIocList[$index][0] == $curIocList[$indexY][0]) {
+                    $cnt++;
                 }
             }
-            if($cnt == 0) $cnt = 1;
-            $iocRes[$curIocList[$index]] = $cnt;
+            if ($cnt == 0) $cnt = 1;
+            $iocRes[$curIocList[$index][0]] = [$cnt, $curIocList[$index][1], $curIocList[$index][2]];
         }
+
         arsort($iocRes);
         $iocRes = array_slice($iocRes, 0, 5);
+
+        //DailyCount
+        $decDailyCount = [];
+        $dailyCntLst = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])->select(DB::raw('DATE(created_at) as dt'), DB::raw('count(*) as count'))->groupBy(DB::raw('DATE(created_at)'))->orderBy('dt', 'asc')->get();
+        foreach ($dailyCntLst as $row)
+        {
+            $decDailyCount[$row->dt] = $row->count;
+        }
 
         //weeklyCount and monthly Count//
         $curYear = date('Y');
@@ -110,16 +140,15 @@ class DashboardController extends Controller
         }
 
         $decWeeklyCount = [];
-        $curDate = date('Y-m-d');
-        $currentWeek = $this->rangeWeek($curDate);
+
         $curWeekDates = $this->displayDates($currentWeek['start'], $currentWeek['end']);
         foreach ($curWeekDates as $val)
         {
             $detection_count = Detection::query()->select( DB::raw('count(*) as count'))->where('created_at', 'like', $val.'%')->get();
             $decWeeklyCount[$val] = $detection_count[0]->count;
         }
-        return view('pages.dashboard', compact('detection_cnt', 'takedown_cnt', 'detection_count_level', 'tag_ranking',
-            'iocRes', 'decMonthlyCount', 'decWeeklyCount', 'notification_icons'));
+        return view('pages.dashboard', compact('detection_count_list', 'takedown_cnt', 'detection_count_level', 'tag_ranking',
+            'iocRes', 'decDailyCount', 'decMonthlyCount', 'decWeeklyCount', 'notification_icons', 'notification_colors'));
     }
 
     /**
