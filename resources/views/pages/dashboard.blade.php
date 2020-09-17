@@ -505,7 +505,6 @@
                         }
                     );
                 }
-
             });
         </script>
 @endpush

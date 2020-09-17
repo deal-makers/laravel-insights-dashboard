@@ -74,14 +74,12 @@
                 <span class="menu-arrow"></span>
             </a>
             <ul class="nav-second-level" aria-expanded="false">
-                @if(Auth::user()->hasRole('administrator') || Auth::user()->hasRole('analyst'))
                 <li>
                     <a href="{{ route('feedbacks.index') }}">
                         <i class="fe-edit-1"></i>
                         <span> @lang('global.feedback') </span>
                     </a>
                 </li>
-                @endif
                 <li>
                     <a href="{{ route('reports.index') }}">
                         <i class="fe-layers"></i>

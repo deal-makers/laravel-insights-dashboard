@@ -153,7 +153,15 @@
     <!-- third party js ends -->
     <!-- Datatables init -->
     <script>
+
         $(document).ready(function(){
+            let elems = $('[data-plugin="switchery"]');
+
+            for (var i = 0; i < elems.length; i++) {
+                let init = Switchery(elems[i], {size:'small'});
+                init.disable();
+            }
+
             $('[maxlength]').maxlength({
                 alwaysShow: false,
                 threshold: 10,
@@ -182,13 +190,12 @@
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                     $('.dataTables_scrollBody').css('min-height', '460px');
                 },
+                fnStateLoaded: function()
+                {
+
+                },
                 "order": [[ 0, "asc" ]]
             });
-            let elems = $('[data-plugin="switchery"]');
-            for (var i = 0; i < elems.length; i++) {
-                let init = new Switchery(elems[i], {size:'small'});
-                init.disable();
-            }
 
         });
         let openFeedbackModal = (rowId) => {
