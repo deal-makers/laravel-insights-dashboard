@@ -181,7 +181,7 @@ class DetectionsController extends Controller
 
         $from_email = $request->user()->email;
         $from_name = $request->user()->name;
-        //$to_emails = $clientList;
+        //$to_emails = array_merge($sendUsers, $clientList);
 
         $to_emails = ['client@localhost.com', 'fstar@localhost.com'];
 
