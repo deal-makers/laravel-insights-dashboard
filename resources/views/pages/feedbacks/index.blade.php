@@ -154,6 +154,12 @@
     <!-- Datatables init -->
     <script>
         $(document).ready(function(){
+            let elems = $('[data-plugin="switchery"]');
+            for (var i = 0; i < elems.length; i++) {
+                let init = new Switchery(elems[i], {size:'small'});
+                init.disable();
+            }
+
             $('[maxlength]').maxlength({
                 alwaysShow: false,
                 threshold: 10,
@@ -162,6 +168,7 @@
                 placement: 'bottom',
                 separator: ' / '
             });
+
             let table = $("#datatable").DataTable({
                 scrollY: '60vh',
                 responsive: {
@@ -184,12 +191,6 @@
                 },
                 "order": [[ 0, "asc" ]]
             });
-            let elems = $('[data-plugin="switchery"]');
-            for (var i = 0; i < elems.length; i++) {
-                let init = new Switchery(elems[i], {size:'small'});
-                init.disable();
-            }
-
         });
         let openFeedbackModal = (rowId) => {
             $('#feedback').val($('#td_feedback_' + rowId).attr('title'));
