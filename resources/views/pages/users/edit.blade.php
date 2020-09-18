@@ -59,8 +59,12 @@
                     </div>
                 @endif
             </div>
-            @if(!in_array('administrator', $user->roles()->pluck('name')->toArray()))
-            <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
+            @php
+                $disabled = '';
+                if(in_array('administrator', $user->roles()->pluck('name')->toArray()))
+                    $disabled = "style=display:none";
+            @endphp
+            <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}" {{ $disabled }}>
                 {!! Form::label('roles', trans('cruds.user.fields.roles')) !!}
                 <div>
                     {!! Form::select('roles[]', $roles
@@ -73,7 +77,7 @@
                     </div>
                 @endif
             </div>
-            <div class="row">
+            <div class="row" {{ $disabled }}>
                 <div class="form-group col-md-4">
                     {!! Form::label('status', trans('cruds.user.fields.status')) !!}
                     <div>
@@ -104,8 +108,8 @@
                     @endif
                 </div>
             </div>
-            <div class="form-group">
-                {!! Form::label('roles', trans('cruds.user.fields.contract')) !!}
+            <div class="form-group" {{ $disabled }}>
+                {!! Form::label('contract', trans('cruds.user.fields.contract')) !!}
                 <div>
                     <textarea class="form-control" id="contract" name="contract" rows="8">{{ old('contract', isset($user) ? $user->contract : '') }}</textarea>
                 </div>
@@ -115,7 +119,7 @@
                     </div>
                 @endif
             </div>
-            @endif
+
             <div class="form-group">
                 {!! Form::label('avatar', trans('cruds.user.fields.avatar')) !!}
                 <div class="col-md-2">

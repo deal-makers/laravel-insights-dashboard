@@ -110,6 +110,7 @@ class UsersController extends Controller
             return abort(401);
         }
 
+
         if ($request->hasFile('photo')) {
             if(!is_null($user->avatar) && !empty($user->avatar))
                 Storage::delete("images/avatars/".$user->avatar);
