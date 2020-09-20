@@ -43,11 +43,11 @@
                                         </div>
                                     </div>
 
-{{--                                    <div class="form-group mb-3">--}}
-{{--                                        <label for="captcha">Captcha</label>--}}
-{{--                                        {!! NoCaptcha::renderJs() !!}--}}
-{{--                                        {!! NoCaptcha::display() !!}--}}
-{{--                                    </div>--}}
+                                    <div class="form-group mb-3">
+                                        <label for="captcha">Captcha</label>
+                                        {!! NoCaptcha::renderJs() !!}
+                                        {!! NoCaptcha::display() !!}
+                                    </div>
 
                                     <div class="form-group mb-0 text-center">
                                         <button class="btn btn-primary btn-block" type="submit"> @lang("global.login") </button>
