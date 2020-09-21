@@ -165,7 +165,6 @@ class DetectionsController extends Controller
         $notifyData['send_clients'] = serialize($request->clients);
         $notifyData['seen_users'] = serialize([]);
         Notification::create($notifyData);
-
         //Notifiy Email Send
         $sendUsers = User::whereHas('roles', function($role) {
             $role->where('name', '<>', 'client');
@@ -173,11 +172,14 @@ class DetectionsController extends Controller
 
         $clientList = User::query()->whereIn('id', $request->clients)->pluck('email')->toArray();;
 
+        $reference = [];
+        if(isset($request->references) && $request->references != '')
+            $reference = json_decode($request->references, true);
 
         $mailData = array('dec_type' => $insertData['type'], 'new_id' => $notifyData['detection_id'], 'subject'=>'Alerta de Segurança', 'tlp' => session('tlp')[$request->tlp], 'dec_level' => $request->level,
             'title' => $request->title, 'decription' => $request->description, 'scenario' => $request->scenery, 'pap' => session('pap')[$request->pap], 'alert_id' => $insertData['dec_id'],
             'ioc' => $iocLst ?? [], 'tech_detail' => $request->tech_detail, 'cve' => json_decode($request->cves, true) ?? [], 'cvss' => session('cvss')[$request->cvss] ?? '', 'recomend' => $request->comment,
-            'reference' => json_decode($request->references, true));
+            'reference' => $reference);
 
         $from_email = $request->user()->email;
         $from_name = $request->user()->name;
@@ -186,7 +188,7 @@ class DetectionsController extends Controller
         $to_emails = ['client@localhost.com', 'fstar@localhost.com'];
 
         Mail::send('mails.notify', $mailData, function($message) use ($to_emails, $from_email, $from_name) {
-            $message->to($to_emails)
+            $message->bcc($to_emails)
                 ->subject('Alerta de Segurança');
             $message->from($from_email, $from_name);
         });
