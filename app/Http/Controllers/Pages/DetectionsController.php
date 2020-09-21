@@ -165,7 +165,6 @@ class DetectionsController extends Controller
         $notifyData['send_clients'] = serialize($request->clients);
         $notifyData['seen_users'] = serialize([]);
         Notification::create($notifyData);
-
         //Notifiy Email Send
         $sendUsers = User::whereHas('roles', function($role) {
             $role->where('name', '<>', 'client');
