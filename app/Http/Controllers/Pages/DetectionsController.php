@@ -189,7 +189,7 @@ class DetectionsController extends Controller
         Mail::send('mails.notify', $mailData, function($message) use ($to_emails, $from_email, $from_name) {
             $message->bcc($to_emails)
                 ->subject('Alerta de Segurança');
-            $message->from('icma@cherokee.net.br', __('global.title'));
+            $message->from($from_email, __('global.title'));
         });
 
         ///////////////////////////
