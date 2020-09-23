@@ -39,7 +39,7 @@ class DetectionsController extends Controller
             $curUserId = Auth::user()->id;
             //$detections = Detection::query()->where('client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
             //$detections = $decModel->where('client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
-            $decList =  Detection::where('detections.client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
+            $decList = Detection::where('detections.client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')->get();
 //                leftJoin('dec_attachments', 'detections.id', '=', 'dec_attachments.parent_id')->select('detections.id', 'detections.dec_id', 'detections.title', 'detections.description',
 //                'detections.detection_level', 'detections.created_at', 'detections.type', 'dec_attachments.mark_read', 'dec_attachments.feedback')->get();
             $detections = [];
@@ -184,13 +184,12 @@ class DetectionsController extends Controller
         $from_email = $request->user()->email;
         $from_name = $request->user()->name;
         //$to_emails = array_merge($sendUsers, $clientList);
-
-        $to_emails = ['client@localhost.com', 'fstar@localhost.com'];
-
+        //$to_emails = ['client@localhost.com', 'fstar@localhost.com'];
+        $to_emails = $clientList;
         Mail::send('mails.notify', $mailData, function($message) use ($to_emails, $from_email, $from_name) {
             $message->bcc($to_emails)
                 ->subject('Alerta de Segurança');
-            $message->from($from_email, $from_name);
+            $message->from('icma@cherokee.net.br', __('global.title'));
         });
 
         ///////////////////////////

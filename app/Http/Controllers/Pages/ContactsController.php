@@ -93,10 +93,9 @@ class ContactsController extends Controller
             $contact_reason = session('contact_reason')[$reason];
             $data = array('title'=>trans('global.mail.contact_us_mail'), 'name'=>"$to_name! [ Contact Reason: $contact_reason, Detection ID: $mail_Dec_id ]", 'body' => $contents);
             Mail::send('mails.contacts', $data, function($message) use ($to_name, $to_email, $from_email, $from_name) {
-                $to_email = 'root@localhost.com'; ///Test email....
                 $message->to($to_email, $to_name)
                     ->subject(trans('global.mail.contact_us_mail'));
-                $message->from($from_email, $from_name);
+                $message->from('icma@cherokee.net.br', __('global.title'));
             });
         }
         return redirect('contacts')->with('success', trans('global.msg.contact_send'));
