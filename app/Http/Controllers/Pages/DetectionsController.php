@@ -187,7 +187,7 @@ class DetectionsController extends Controller
         //$to_emails = ['client@localhost.com', 'fstar@localhost.com'];
         $to_emails = $clientList;
         Mail::send('mails.notify', $mailData, function($message) use ($to_emails, $from_email, $from_name) {
-            $message->bcc($to_emails)
+            $message->to($to_emails)
                 ->subject('Alerta de Segurança');
             $message->from($from_email, __('global.title'));
         });
