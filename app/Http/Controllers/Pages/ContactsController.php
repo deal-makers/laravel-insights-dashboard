@@ -95,7 +95,7 @@ class ContactsController extends Controller
             Mail::send('mails.contacts', $data, function($message) use ($to_name, $to_email, $from_email, $from_name) {
                 $message->to($to_email, $to_name)
                     ->subject(trans('global.mail.contact_us_mail'));
-                $message->from($from_email, $from_name);
+                $message->from('icma@cherokee.net.br', __('global.title'));
             });
         }
         return redirect('contacts')->with('success', trans('global.msg.contact_send'));
