@@ -87,7 +87,7 @@
                                         <i class='fe-edit'></i>
                                         {{ trans('global.edit') }}
                                     </a>
-                                    @if(!in_array('administrator', $user->roles()->pluck('name')->toArray()))
+                                    @if($user->id != 1)
                                     <form action="{{ route('users.destroy', $user->id) }}" method="POST" onclick="isConfirm(this)" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
