@@ -61,7 +61,7 @@
             </div>
             @php
                 $disabled = '';
-                if($user->id != 1)
+                if($user->id == 1)
                     $disabled = "style=display:none";
             @endphp
             <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}" {{ $disabled }}>
