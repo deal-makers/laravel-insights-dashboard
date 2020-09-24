@@ -61,7 +61,7 @@
             </div>
             @php
                 $disabled = '';
-                if(in_array('administrator', $user->roles()->pluck('name')->toArray()))
+                if($user->id != 1)
                     $disabled = "style=display:none";
             @endphp
             <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}" {{ $disabled }}>
