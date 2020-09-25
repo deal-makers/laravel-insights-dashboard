@@ -161,6 +161,10 @@
             height: 32px;
             padding: 3px 5px;
         }
+        .dropify-wrapper
+        {
+            min-width: 200px;
+        }
 
     </style>
 @endpush

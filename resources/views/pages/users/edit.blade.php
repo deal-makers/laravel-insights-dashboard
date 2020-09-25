@@ -123,8 +123,8 @@
             <div class="form-group">
                 {!! Form::label('avatar', trans('cruds.user.fields.avatar')) !!}
                 <div class="col-md-2">
-                <input type="file" name="photo" class="dropify" 
-                data-allowed-file-extensions="jpg png gif tif jpeg" />
+                    <input type="file" name="photo" class="dropify"
+                    data-allowed-file-extensions="jpg png gif tif jpeg" />
                 </div>
             </div>
             <div>
@@ -165,6 +165,10 @@
         {
             height: 32px;
             padding: 3px 5px;
+        }
+        .dropify-wrapper
+        {
+            min-width: 200px;
         }
     </style>
 @endpush
