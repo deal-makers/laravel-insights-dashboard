@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 use App\Http\Controllers\Controller;
@@ -47,8 +48,22 @@ class DashboardController extends Controller
 
         $detection_count_list = [];
 
+        $curUserId = Auth::user()->id;
+
         foreach (session('dec_type') as $key => $value) {
-            $detection_cnt = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])->where('type', '=', $key)->select(DB::raw('count(*) as count'))->groupBy('type')->orderBy('count', 'desc')->get();
+            if(Auth::user()->hasRole('client'))
+            {
+                $detection_cnt = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])->where('type', '=', $key)
+                    ->where('detections.client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')
+                    ->select(DB::raw('count(*) as count'))
+                    ->groupBy('type')->orderBy('count', 'desc')->get();
+            } else
+            {
+                $detection_cnt = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])->where('type', '=', $key)->select(DB::raw('count(*) as count'))
+                    ->groupBy('type')->orderBy('count', 'desc')->get();
+            }
+
+
             if (sizeof($detection_cnt) > 0)
                 $detection_count_list[$key] = $detection_cnt[0]->count;
             else
@@ -56,11 +71,20 @@ class DashboardController extends Controller
         }
         arsort($detection_count_list);
 
-        $takedown_cnt = User::whereHas(
-            'roles', function ($q) {
-            $q->where('name', 'client');
-        })->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])
-            ->sum('takedowns');
+        if(Auth::user()->hasRole('client')) {
+            $takedown_cnt = User::whereHas(
+                'roles', function ($q) {
+                $q->where('name', 'client');
+            })->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])
+                ->where('id', '=', $curUserId)
+                ->sum('takedowns');
+        } else {
+            $takedown_cnt = User::whereHas(
+                'roles', function ($q) {
+                $q->where('name', 'client');
+            })->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])
+                ->sum('takedowns');
+        }
 
         $detection_count_list[sizeof(session('dec_type'))] = (int)$takedown_cnt;
 
@@ -68,9 +92,23 @@ class DashboardController extends Controller
         $notification_icons = ['fe-rss', 'fe-share-2', 'fe-zap', 'fe-tv', 'fe-crop', 'fe-shield-off', 'fe-gitlab', 'fe-bold', 'fe-wifi-off', 'mdi mdi-rotate-225 mdi-account'];
         $notification_colors = ['danger', 'warning', 'success', 'primary', 'blue', 'pink', 'info', 'warning', 'primary', 'dark'];
 
-        $detection_count_level = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])->select('detection_level', DB::raw('count(*) as count'))->groupBy('detection_level')->orderBy('count', 'desc')->limit(4)->get();
-        //$tag_list = Tags::query()->orderBy('group')->groupBy('group')->select( 'group', \DB::raw("GROUP_CONCAT(id, '::', tag) as tags"))->get();
-        $tag_list = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])->select('tags', 'ioc', 'id', 'dec_id')->get();
+        if(Auth::user()->hasRole('client')) {
+            $detection_count_level = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])
+                ->where('detections.client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')
+                ->select('detection_level', DB::raw('count(*) as count'))->groupBy('detection_level')->orderBy('count', 'desc')->limit(4)->get();
+        } else
+        {
+            $detection_count_level = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])->select('detection_level', DB::raw('count(*) as count'))->groupBy('detection_level')->orderBy('count', 'desc')->limit(4)->get();
+        }
+        if(Auth::user()->hasRole('client')) {
+            $tag_list = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])
+                ->where('detections.client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')
+                ->select('tags', 'ioc', 'id', 'dec_id')->get();
+        } else
+        {
+            $tag_list = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])->select('tags', 'ioc', 'id', 'dec_id')->get();
+        }
+
         $tags = Tags::query()->select('id', 'tag')->get();
         $tag_ranking = [];
         foreach ($tags as $tag) {
@@ -117,7 +155,14 @@ class DashboardController extends Controller
 
         //DailyCount
         $decDailyCount = [];
-        $dailyCntLst = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])->select(DB::raw('DATE(created_at) as dt'), DB::raw('count(*) as count'))->groupBy(DB::raw('DATE(created_at)'))->orderBy('dt', 'asc')->get();
+        if(Auth::user()->hasRole('client')) {
+            $dailyCntLst = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])
+                ->where('detections.client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')
+                ->select(DB::raw('DATE(created_at) as dt'), DB::raw('count(*) as count'))->groupBy(DB::raw('DATE(created_at)'))->orderBy('dt', 'asc')->get();
+        } else
+        {
+            $dailyCntLst = Detection::query()->whereBetween(DB::raw("DATE(created_at)"), [$start_date, $end_date])->select(DB::raw('DATE(created_at) as dt'), DB::raw('count(*) as count'))->groupBy(DB::raw('DATE(created_at)'))->orderBy('dt', 'asc')->get();
+        }
         foreach ($dailyCntLst as $row)
         {
             $decDailyCount[$row->dt] = $row->count;
@@ -132,7 +177,14 @@ class DashboardController extends Controller
             $monthVal = $mon;
             if(strlen($mon) == 1) $monthVal = '0'.$mon;
             $calDate = $curYear . '-' . $monthVal;
-            $detection_count = Detection::query()->select( DB::raw('count(*) as count'))->where('created_at', 'like', $calDate.'%')->get();
+            if(Auth::user()->hasRole('client')) {
+                $detection_count = Detection::query()->select( DB::raw('count(*) as count'))
+                    ->where('detections.client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')
+                    ->where('created_at', 'like', $calDate.'%')->get();
+            } else
+            {
+                $detection_count = Detection::query()->select( DB::raw('count(*) as count'))->where('created_at', 'like', $calDate.'%')->get();
+            }
             if(sizeof($detection_count) > 0)
             {
                 $decMonthlyCount[$calDate] = $detection_count[0]->count;
@@ -144,7 +196,14 @@ class DashboardController extends Controller
         $curWeekDates = $this->displayDates($currentWeek['start'], $currentWeek['end']);
         foreach ($curWeekDates as $val)
         {
-            $detection_count = Detection::query()->select( DB::raw('count(*) as count'))->where('created_at', 'like', $val.'%')->get();
+            if(Auth::user()->hasRole('client')) {
+                $detection_count = Detection::query()->select(DB::raw('count(*) as count'))
+                    ->where('detections.client_send_ids', 'REGEXP', '.*;s:[0-9]+:"'.$curUserId.'".*')
+                    ->where('created_at', 'like', $val . '%')->get();
+            } else
+            {
+                $detection_count = Detection::query()->select(DB::raw('count(*) as count'))->where('created_at', 'like', $val . '%')->get();
+            }
             $decWeeklyCount[$val] = $detection_count[0]->count;
         }
         return view('pages.dashboard', compact('detection_count_list', 'takedown_cnt', 'detection_count_level', 'tag_ranking',

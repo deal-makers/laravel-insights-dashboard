@@ -120,7 +120,7 @@
                                 <div class="form-group {{ $errors->has('ioc') ? 'has-error' : '' }}">
                                     <label for="ioc">{{ trans('cruds.detections.fields.ioc') }}</label>
                                     <div class="ioc-content">
-                                        @if(isset($detection))
+                                        @if(isset($detection) && !is_null($detection->ioc))
                                             @foreach(unserialize($detection->ioc) as $key => $value)
                                                 <div class="row mb-1">
                                                     <div class="col-md-4">
